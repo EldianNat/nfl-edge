@@ -15,6 +15,9 @@ const S = {
   pos: "ALL", q: "", team: "ALL", mine: false,
   roster: store.get("roster", []),
   prop: store.get("prop", { player: "", stat: "recYds", line: "", over: "", under: "" }),
+  pg: store.get("pg", "ALL"),      // prop checker game filter
+  psort: store.get("psort", "chance"), // "chance" | "game"
+  ppos: "ALL",
   ss: { a: "", b: "" },
 };
 let D, LOG, LEGS = new Map(), PLAYERS = new Map(), GAMES = new Map();
@@ -194,6 +197,12 @@ function propChips(p) {
   return list.map(([k, x]) => `<span class="chip" title="Real per-game average allowed by ${p.opp} to ${p.pos}s vs. league average">${p.opp} allows ${x.allowed} ${MU_LABEL[k]}/g to ${p.pos}s (lg ${x.league}) · #${x.rank} of ${x.of}</span>`).join("");
 }
 function propsView() {
+  if (S.pg !== "ALL" && !GAMES.has(S.pg)) S.pg = "ALL";
+  const pool = D.players.filter((x) => (S.pg === "ALL" || x.gameId === S.pg) && (S.ppos === "ALL" || x.pos === S.ppos));
+  const gOrder = new Map(D.games.map((g, i) => [g.id, i]));
+  const gameSel = `<select data-pf="pg"><option value="ALL">All games</option>${D.games.map((g) => `<option value="${g.id}" ${S.pg === g.id ? "selected" : ""}>${g.away} @ ${g.home} · ${kickoff(g)}</option>`).join("")}</select>`;
+  const posSel = `<select data-pf="ppos">${["ALL", "QB", "RB", "WR", "TE"].map((x) => `<option ${S.ppos === x ? "selected" : ""}>${x}</option>`).join("")}</select>`;
+  const sortSel = `<select data-pf="psort"><option value="chance" ${S.psort === "chance" ? "selected" : ""}>Sort: highest chance</option><option value="game" ${S.psort === "game" ? "selected" : ""}>Sort: by game (kickoff order)</option></select>`;
   const p = D.players.find((x) => `${x.name} (${x.team})` === S.prop.player);
   const st = STATS[S.prop.stat];
   let out = "";
@@ -215,14 +224,15 @@ function propsView() {
     }
     out += `<div class="chips"><span class="chip">${p.pos} ${p.team} ${p.home ? "vs" : "@"} ${p.opp}</span>${propChips(p)}${p.injury ? `<span class="chip w">${esc(p.injury.status)}</span>` : ""}</div>`;
   }
-  const td = [...D.players].sort((a, b) => b.tdProb - a.tdProb).slice(0, 25);
-  return `${early()}<div class="card"><h3>Prop checker</h3><div class="muted">Type the line and price from Hard Rock Bet's prop menu.</div>
-  <div class="controls" style="margin-top:8px"><input list="pl2" data-p="player" placeholder="Player" value="${esc(S.prop.player)}"><datalist id="pl2">${D.players.map((x) => `<option value="${esc(x.name)} (${x.team})">`).join("")}</datalist>
+  const td = [...pool].sort((a, b) => S.psort === "game" ? (gOrder.get(a.gameId) - gOrder.get(b.gameId)) || b.tdProb - a.tdProb : b.tdProb - a.tdProb).slice(0, S.pg === "ALL" && S.psort === "chance" ? 25 : 80);
+  return `${early()}<div class="card"><h3>Prop checker</h3><div class="muted">Pick a game to narrow the player list, then type the line and price from Hard Rock Bet's prop menu.</div>
+  <div class="controls" style="margin-top:8px">${gameSel} ${posSel}</div>
+  <div class="controls" style="margin-top:8px"><input list="pl2" data-p="player" placeholder="Player" value="${esc(S.prop.player)}"><datalist id="pl2">${pool.map((x) => `<option value="${esc(x.name)} (${x.team})">`).join("")}</datalist>
   <select data-p="stat">${Object.entries(STATS).map(([k, v]) => `<option value="${k}" ${S.prop.stat === k ? "selected" : ""}>${v.label}</option>`).join("")}</select>
   ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="line" placeholder="Line" value="${esc(S.prop.line)}">`}
   <input class="odds" data-p="over" placeholder="${S.prop.stat === "td" ? "Yes odds" : "Over odds"}" value="${esc(S.prop.over)}">
   ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="under" placeholder="Under odds" value="${esc(S.prop.under)}">`}</div>${out}</div>
-  <h2>Anytime TD leaders</h2><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Def. TDs allowed to pos</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
+  <h2>Anytime TD leaders</h2><div class="controls">${sortSel}<span class="muted">${pool.length} players${S.pg !== "ALL" ? " in this game" : ""}</span></div><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Def. TDs allowed to pos</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
   ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td class="muted">${p.matchups.td ? `${p.matchups.td.allowed}/g (lg ${p.matchups.td.league}) #${p.matchups.td.rank}` : "–"}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>`;
 }
 
@@ -273,6 +283,7 @@ document.addEventListener("change", (e) => {
   if (d.stake !== undefined) { S.stake = num(el.value) ?? 0; store.set("stake", S.stake); return render(); }
   if (d.f) { S[d.f] = el.type === "checkbox" ? el.checked : el.value; if (d.f === "scoring") store.set("scoring", S.scoring); return render(); }
   if (d.ss) { S.ss[d.ss] = el.value; return render(); }
+  if (d.pf) { S[d.pf] = el.value; if (d.pf === "pg" || d.pf === "psort") store.set(d.pf, S[d.pf]); return render(); }
   if (d.p) { S.prop[d.p] = el.value; store.set("prop", S.prop); return render(); }
 });
 document.addEventListener("input", (e) => {
