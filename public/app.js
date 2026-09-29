@@ -205,33 +205,42 @@ function propsView() {
   const sortSel = `<select data-pf="psort"><option value="chance" ${S.psort === "chance" ? "selected" : ""}>Sort: highest chance</option><option value="game" ${S.psort === "game" ? "selected" : ""}>Sort: by game (kickoff order)</option></select>`;
   const p = D.players.find((x) => `${x.name} (${x.team})` === S.prop.player);
   const st = STATS[S.prop.stat];
+  const inp = ((S.prop.by ??= {})[S.prop.stat] ??= { line: "", over: "", under: "" });
+  const MIN = { recYds: 5, rushYds: 3, passYds: 30, rec: 0.5 };
+  const half = (x) => Math.round(x - 0.5) + 0.5;
   let out = "";
   if (p) {
     if (S.prop.stat === "td") {
-      const o = num(S.prop.over);
-      out = `<div class="big">${pct(p.tdProb, 1)}</div><div>Fair price <b>${fmtOdds(p.fairTd)}</b> — take it only if Hard Rock pays better.${o != null ? ` At ${fmtOdds(o)}: EV <b class="${cls(ev(p.tdProb, o))}">${signed(ev(p.tdProb, o) * 100, 1)}%</b>` : ""}</div>`;
+      const o = num(inp.over);
+      out = `<div class="big">${pct(p.tdProb, 1)}</div><div>Anytime TD chance for ${esc(p.name)}. Fair price <b>${fmtOdds(p.fairTd)}</b> — take it only if Hard Rock pays better.${o != null ? ` At ${fmtOdds(o)}: EV <b class="${cls(ev(p.tdProb, o))}">${signed(ev(p.tdProb, o) * 100, 1)}%</b>` : ""}</div>`;
     } else {
-      const mu = p.stats[st.key] * (p.avail || 1) || 0, line = num(S.prop.line);
-      if (line == null) out = `<div class="big">${mu.toFixed(1)}</div><div class="muted">projected ${st.label.toLowerCase()} — enter Hard Rock's line above.</div>`;
-      else {
-        const s = Math.max(0.5, st.cv * mu), over = 1 - normCdf((line - mu) / s);
-        const oo = num(S.prop.over), uo = num(S.prop.under);
-        out = `<div class="two"><div><div class="muted">Projection</div><div class="big">${mu.toFixed(1)}</div></div>
-        <div><div class="muted">Over ${line}</div><div class="big">${pct(over, 1)}</div><div>fair ${fmtOdds(probToAmerican(over))}${oo != null ? ` · EV <b class="${cls(ev(over, oo))}">${signed(ev(over, oo) * 100, 1)}%</b>` : ""}</div></div>
-        <div><div class="muted">Under ${line}</div><div class="big">${pct(1 - over, 1)}</div><div>fair ${fmtOdds(probToAmerican(1 - over))}${uo != null ? ` · EV <b class="${cls(ev(1 - over, uo))}">${signed(ev(1 - over, uo) * 100, 1)}%</b>` : ""}</div></div></div>
-        <div class="muted">Distribution: normal, sd ≈ ${(st.cv * 100).toFixed(0)}% of projection (typical week-to-week spread for this stat).</div>`;
+      const mu = p.stats[st.key] * (p.avail || 1) || 0, line = num(inp.line);
+      const s = Math.max(0.5, st.cv * mu);
+      if (mu < MIN[S.prop.stat]) {
+        out = `<div class="banner">${esc(p.name)} (${p.pos}) isn't projected for meaningful ${st.label.toLowerCase()} (${mu.toFixed(1)}). Pick a different stat or player.</div>`;
+      } else {
+        const ladder = [...new Set((S.prop.stat === "rec" ? [-2, -1, 0, 1, 2].map((d) => half(mu + d)) : [0.6, 0.8, 1, 1.2, 1.4].map((f) => half(mu * f))).filter((x) => x > 0))];
+        const lad = `<div class="tbl" style="margin-top:8px"><table><tr><th>Line</th><th>Over</th><th>Under</th><th>Fair over price</th></tr>${ladder.map((L) => { const o = 1 - normCdf((L - mu) / s); return `<tr><td>${L}</td><td>${pct(o, 1)}</td><td>${pct(1 - o, 1)}</td><td>${fmtOdds(probToAmerican(o))}</td></tr>`; }).join("")}</table></div>`;
+        const head = `<div class="muted">${esc(p.name)} · projected ${st.label.toLowerCase()}</div><div class="big">${mu.toFixed(1)}</div>`;
+        if (line == null) out = `${head}<div class="muted">Enter Hard Rock's line above for an exact over/under chance. Model chance at typical lines:</div>${lad}`;
+        else {
+          const over = 1 - normCdf((line - mu) / s), oo = num(inp.over), uo = num(inp.under);
+          out = `${head}<div class="two"><div><div class="muted">Over ${line}</div><div class="big">${pct(over, 1)}</div><div>fair ${fmtOdds(probToAmerican(over))}${oo != null ? ` · EV <b class="${cls(ev(over, oo))}">${signed(ev(over, oo) * 100, 1)}%</b>` : ""}</div></div>
+          <div><div class="muted">Under ${line}</div><div class="big">${pct(1 - over, 1)}</div><div>fair ${fmtOdds(probToAmerican(1 - over))}${uo != null ? ` · EV <b class="${cls(ev(1 - over, uo))}">${signed(ev(1 - over, uo) * 100, 1)}%</b>` : ""}</div></div></div>
+          <div class="muted">Normal distribution, sd ≈ ${(st.cv * 100).toFixed(0)}% of projection. Other lines:</div>${lad}`;
+        }
       }
     }
     out += `<div class="chips"><span class="chip">${p.pos} ${p.team} ${p.home ? "vs" : "@"} ${p.opp}</span>${propChips(p)}${p.injury ? `<span class="chip w">${esc(p.injury.status)}</span>` : ""}</div>`;
-  }
+  } else out = `<p class="muted">Choose a player above to see the numbers.</p>`;
   const td = [...pool].sort((a, b) => S.psort === "game" ? (gOrder.get(a.gameId) - gOrder.get(b.gameId)) || b.tdProb - a.tdProb : b.tdProb - a.tdProb).slice(0, S.pg === "ALL" && S.psort === "chance" ? 25 : 80);
   return `${early()}<div class="card"><h3>Prop checker</h3><div class="muted">Pick a game to narrow the player list, then type the line and price from Hard Rock Bet's prop menu.</div>
   <div class="controls" style="margin-top:8px">${gameSel} ${posSel}</div>
   <div class="controls" style="margin-top:8px"><input list="pl2" data-p="player" placeholder="Player" value="${esc(S.prop.player)}"><datalist id="pl2">${pool.map((x) => `<option value="${esc(x.name)} (${x.team})">`).join("")}</datalist>
   <select data-p="stat">${Object.entries(STATS).map(([k, v]) => `<option value="${k}" ${S.prop.stat === k ? "selected" : ""}>${v.label}</option>`).join("")}</select>
-  ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="line" placeholder="Line" value="${esc(S.prop.line)}">`}
-  <input class="odds" data-p="over" placeholder="${S.prop.stat === "td" ? "Yes odds" : "Over odds"}" value="${esc(S.prop.over)}">
-  ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="under" placeholder="Under odds" value="${esc(S.prop.under)}">`}</div>${out}</div>
+  ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="line" placeholder="Line" value="${esc(inp.line)}">`}
+  <input class="odds" data-p="over" placeholder="${S.prop.stat === "td" ? "Yes odds" : "Over odds"}" value="${esc(inp.over)}">
+  ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="under" placeholder="Under odds" value="${esc(inp.under)}">`}</div>${out}</div>
   <h2>Anytime TD leaders</h2><div class="controls">${sortSel}<span class="muted">${pool.length} players${S.pg !== "ALL" ? " in this game" : ""}</span></div><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Def. TDs allowed to pos</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
   ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td class="muted">${p.matchups.td ? `${p.matchups.td.allowed}/g (lg ${p.matchups.td.league}) #${p.matchups.td.rank}` : "–"}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>`;
 }
@@ -284,7 +293,7 @@ document.addEventListener("change", (e) => {
   if (d.f) { S[d.f] = el.type === "checkbox" ? el.checked : el.value; if (d.f === "scoring") store.set("scoring", S.scoring); return render(); }
   if (d.ss) { S.ss[d.ss] = el.value; return render(); }
   if (d.pf) { S[d.pf] = el.value; if (d.pf === "pg" || d.pf === "psort") store.set(d.pf, S[d.pf]); return render(); }
-  if (d.p) { S.prop[d.p] = el.value; store.set("prop", S.prop); return render(); }
+  if (d.p) { if (["line", "over", "under"].includes(d.p)) ((S.prop.by ??= {})[S.prop.stat] ??= {})[d.p] = el.value; else S.prop[d.p] = el.value; store.set("prop", S.prop); return render(); }
 });
 document.addEventListener("input", (e) => {
   if (e.target.dataset.f === "q") { S.q = e.target.value; const pos = e.target.selectionStart; render(); const q = $('[data-f="q"]'); q?.focus(); q?.setSelectionRange(pos, pos); }
