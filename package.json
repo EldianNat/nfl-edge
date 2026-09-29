@@ -1,0 +1,13 @@
+{
+  "name": "nfl-edge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "NFL parlay + fantasy matchup research site. Self-updating from nflverse. Entertainment/research only.",
+  "scripts": {
+    "refresh": "node scripts/refresh.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NFL Edge – Parlay & Fantasy Research</title>
+<meta name="description" content="Model-driven NFL game probabilities, parlay builder and fantasy matchups. Updates itself every week.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>NFL <span>Edge</span></h1>
+      <div id="status" class="muted">Loading…</div>
+    </div>
+    <label class="hr">Betting at <b>Hard Rock Bet</b> — type your odds into any box; everything recalculates.</label>
+  </div>
+  <nav class="wrap" id="tabs">
+    <button data-tab="games" class="on">Games</button>
+    <button data-tab="parlay">Parlay Lab <span id="slipCount" class="pill"></span></button>
+    <button data-tab="fantasy">Fantasy</button>
+    <button data-tab="props">Prop Checker</button>
+    <button data-tab="teams">Team Ratings</button>
+    <button data-tab="record">Record</button>
+    <button data-tab="about">How it works</button>
+  </nav>
+</header>
+<main class="wrap" id="view"></main>
+<footer class="wrap muted">
+  Research and entertainment only. Not betting advice. Parlays multiply the sportsbook's edge; most lose. Bet only what you can afford to lose. Problem gambling help: 1-800-GAMBLER.
+</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
