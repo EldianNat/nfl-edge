@@ -77,6 +77,7 @@ const views = {
     <p><b>Leg probabilities.</b> Margin ~ Normal(projection, ${D.marginSd}) and total ~ Normal(projection, 13). "Edge" compares the model probability to the no-vig consensus probability. "EV" uses whatever price you enter (Hard Rock Bet's) or the consensus price.</p>
     <p><b>Parlays.</b> Combined probability multiplies leg probabilities, so it assumes the legs are independent. Keep to one leg per game; same-game legs are correlated and this math misprices them.</p>
     <p><b>Fantasy.</b> Per-player component projections (yards, catches, TDs) use recency-weighted averages regressed toward positional norms (TDs regressed hardest), then scaled by opponent fantasy-points-allowed to that position and the team's projected scoring. Injury-report status reduces the projection.</p>
+    <p><b>Props and touchdown legs use real stats, not fantasy points.</b> For each defense we track what it actually allows per game to each position (passing, rushing and receiving yards, catches, touchdowns), compare it to the league average, and apply that stat-specific matchup to the player's projection. Only the Fantasy tab uses blended fantasy-point matchups.</p>
     <p><b>Hard Rock Bet.</b> No sportsbook publishes a free odds feed, so the automatic lines are the nflverse consensus. Type Hard Rock's actual price in any "HR" box and edges, EV, and parlay payout recalculate. Your entries are saved in your browser only.</p>
     <p><b>Limits.</b> No public feed gives player prop lines or full play-by-play weather/matchup detail in real time; models are simple on purpose. Treat outputs as one input, not a guarantee. Early in the season (few games) everything is noisy.</p></div>`;
   },
@@ -186,6 +187,12 @@ const STATS = {
   passYds: { label: "Passing yards", key: "passYds", cv: 0.3 }, rec: { label: "Receptions", key: "rec", cv: 0.6 },
   td: { label: "Anytime TD", key: null },
 };
+const MU_LABEL = { passYds: "pass yds", rushYds: "rush yds", recYds: "rec yds", rec: "catches", td: "TDs" };
+function propChips(p) {
+  const key = { td: "td", passYds: "passYds", rushYds: "rushYds", recYds: "recYds", rec: "rec" }[S.prop.stat];
+  const list = key && p.matchups[key] ? [[key, p.matchups[key]]] : Object.entries(p.matchups);
+  return list.map(([k, x]) => `<span class="chip" title="Real per-game average allowed by ${p.opp} to ${p.pos}s vs. league average">${p.opp} allows ${x.allowed} ${MU_LABEL[k]}/g to ${p.pos}s (lg ${x.league}) · #${x.rank} of ${x.of}</span>`).join("");
+}
 function propsView() {
   const p = D.players.find((x) => `${x.name} (${x.team})` === S.prop.player);
   const st = STATS[S.prop.stat];
@@ -206,7 +213,7 @@ function propsView() {
         <div class="muted">Distribution: normal, sd ≈ ${(st.cv * 100).toFixed(0)}% of projection (typical week-to-week spread for this stat).</div>`;
       }
     }
-    out += `<div class="chips"><span class="chip">${p.pos} ${p.team} ${p.home ? "vs" : "@"} ${p.opp}</span><span class="chip">Matchup ${p.grade}</span>${p.injury ? `<span class="chip w">${esc(p.injury.status)}</span>` : ""}</div>`;
+    out += `<div class="chips"><span class="chip">${p.pos} ${p.team} ${p.home ? "vs" : "@"} ${p.opp}</span>${propChips(p)}${p.injury ? `<span class="chip w">${esc(p.injury.status)}</span>` : ""}</div>`;
   }
   const td = [...D.players].sort((a, b) => b.tdProb - a.tdProb).slice(0, 25);
   return `${early()}<div class="card"><h3>Prop checker</h3><div class="muted">Type the line and price from Hard Rock Bet's prop menu.</div>
@@ -215,8 +222,8 @@ function propsView() {
   ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="line" placeholder="Line" value="${esc(S.prop.line)}">`}
   <input class="odds" data-p="over" placeholder="${S.prop.stat === "td" ? "Yes odds" : "Over odds"}" value="${esc(S.prop.over)}">
   ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="under" placeholder="Under odds" value="${esc(S.prop.under)}">`}</div>${out}</div>
-  <h2>Anytime TD leaders</h2><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
-  ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>`;
+  <h2>Anytime TD leaders</h2><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Def. TDs allowed to pos</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
+  ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td class="muted">${p.matchups.td ? `${p.matchups.td.allowed}/g (lg ${p.matchups.td.league}) #${p.matchups.td.rank}` : "–"}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>`;
 }
 
 // ----- teams / record -----
