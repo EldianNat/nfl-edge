@@ -19,6 +19,9 @@ const S = {
   psort: store.get("psort", "chance"), // "chance" | "game"
   ppos: "ALL",
   ss: { a: "", b: "" },
+  idea: store.get("idea", "recYds"),  // player parlay ideas: which stat
+  il: store.get("il", {}),            // "stat|playerId" -> {line, odds} typed from Hard Rock
+  ipos: "ALL",
 };
 let D, LOG, LEGS = new Map(), PLAYERS = new Map(), GAMES = new Map();
 
@@ -190,6 +193,47 @@ const STATS = {
   passYds: { label: "Passing yards", key: "passYds", cv: 0.3 }, rec: { label: "Receptions", key: "rec", cv: 0.6 },
   td: { label: "Anytime TD", key: null },
 };
+const SHORT = { recYds: "rec yds", rushYds: "rush yds", passYds: "pass yds", rec: "catches" };
+const statMu = (p, stat) => (p.stats[STATS[stat].key] || 0) * (p.avail || 1);
+const overProb = (p, stat, line) => { const mu = statMu(p, stat); return 1 - normCdf((line - mu) / Math.max(0.5, STATS[stat].cv * mu)); };
+const safeLine = (p, stat, z = 0.385) => { const mu = statMu(p, stat); return Math.floor(mu - z * Math.max(0.5, STATS[stat].cv * mu) - 0.5) + 0.5; };
+const MINPROJ = { recYds: 5, rushYds: 3, passYds: 30, rec: 0.5 };
+// Rebuild a custom leg's probability from live model data (used on load after each weekly refresh).
+function propLeg(c, p) {
+  if (c.kind === "td") return { ...c, prob: p.tdProb, gameId: p.gameId };
+  const o = overProb(p, c.stat, c.line);
+  return { ...c, prob: c.side === "over" ? o : 1 - o, gameId: p.gameId };
+}
+function addPropLeg(p, stat, side, line) {
+  const id = `prop|${p.id}|${stat}|${side}|${line}`;
+  const o = overProb(p, stat, line);
+  S.custom[id] = { kind: "prop", pid: p.id, stat, side, line, label: `${p.name} ${side === "over" ? "O" : "U"} ${line} ${SHORT[stat]}`, prob: side === "over" ? o : 1 - o, gameId: p.gameId };
+  addSlip(id);
+  return id;
+}
+function ideasSection() {
+  const stat = S.idea, st = STATS[stat];
+  const rows = D.players.filter((p) => (S.ipos === "ALL" || p.pos === S.ipos) && !(p.injury && /out|doubt/i.test(p.injury.status)) && statMu(p, stat) >= MINPROJ[stat] && !(stat === "rushYds" && p.pos === "QB") && (S.pg === "ALL" || p.gameId === S.pg))
+    .sort((a, b) => statMu(b, stat) - statMu(a, stat)).slice(0, 15);
+  const mk = { recYds: "recYds", rushYds: "rushYds", passYds: "passYds", rec: "rec" }[stat];
+  const body = rows.map((p) => {
+    const inp = S.il[stat + "|" + p.id] ?? {}, line = num(inp.line), odds = num(inp.odds), mu = statMu(p, stat);
+    const o = line != null ? overProb(p, stat, line) : null;
+    const m = p.matchups[mk];
+    return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${mu.toFixed(1)}</td><td class="muted">${m ? `${m.allowed} (lg ${m.league}) #${m.rank}` : "–"}</td>
+    <td><b>${safeLine(p, stat)}</b></td>
+    <td><input class="odds" inputmode="decimal" data-il="${stat}|${p.id}|line" placeholder="line" value="${esc(inp.line ?? "")}"></td>
+    <td><input class="odds" inputmode="numeric" data-il="${stat}|${p.id}|odds" placeholder="odds" value="${esc(inp.odds ?? "")}"></td>
+    <td>${o == null ? "–" : pct(o)}</td><td>${o != null && odds != null ? `<span class="${cls(ev(o, odds))}">${signed(ev(o, odds) * 100, 1)}%</span>` : "–"}</td>
+    <td><button class="b" data-addprop="${stat}|${p.id}" title="Add the OVER to your slip">+ over</button></td></tr>`;
+  }).join("");
+  return `<h2>Player parlay ideas</h2><div class="controls">
+    <select data-idea="stat">${Object.entries(STATS).filter(([k]) => k !== "td").map(([k, v]) => `<option value="${k}" ${S.idea === k ? "selected" : ""}>${v.label}</option>`).join("")}</select>
+    <select data-idea="ipos">${["ALL", "QB", "RB", "WR", "TE"].map((x) => `<option ${S.ipos === x ? "selected" : ""}>${x}</option>`).join("")}</select>
+    <span class="muted">Follows the game filter above. Top 15 by projection.</span></div>
+    <div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Proj</th><th>${SHORT[stat]} allowed to pos</th><th>Model 65% line</th><th>HR line</th><th>HR odds</th><th>Over %</th><th>EV</th><th></th></tr>${body || `<tr><td colspan="10" class="muted">No players match.</td></tr>`}</table></div>
+    <p class="muted">"Model 65% line" is the line the model gives the over a ~65% chance to clear. If Hard Rock's line is at or below it, the over rates well; if it's higher, skip it. Early-season projections run hot, so treat these as a screen, not a verdict. Enter Hard Rock's line and odds to get a real over % and EV, then add it to your slip.</p>`;
+}
 const MU_LABEL = { passYds: "pass yds", rushYds: "rush yds", recYds: "rec yds", rec: "catches", td: "TDs" };
 function propChips(p) {
   const key = { td: "td", passYds: "passYds", rushYds: "rushYds", recYds: "recYds", rec: "rec" }[S.prop.stat];
@@ -212,7 +256,7 @@ function propsView() {
   if (p) {
     if (S.prop.stat === "td") {
       const o = num(inp.over);
-      out = `<div class="big">${pct(p.tdProb, 1)}</div><div>Anytime TD chance for ${esc(p.name)}. Fair price <b>${fmtOdds(p.fairTd)}</b> — take it only if Hard Rock pays better.${o != null ? ` At ${fmtOdds(o)}: EV <b class="${cls(ev(p.tdProb, o))}">${signed(ev(p.tdProb, o) * 100, 1)}%</b>` : ""}</div>`;
+      out = `<div class="big">${pct(p.tdProb, 1)}</div><div style="margin:6px 0"><button class="b p" data-addtd="${p.id}">+ Anytime TD to slip</button></div><div>Anytime TD chance for ${esc(p.name)}. Fair price <b>${fmtOdds(p.fairTd)}</b> — take it only if Hard Rock pays better.${o != null ? ` At ${fmtOdds(o)}: EV <b class="${cls(ev(p.tdProb, o))}">${signed(ev(p.tdProb, o) * 100, 1)}%</b>` : ""}</div>`;
     } else {
       const mu = p.stats[st.key] * (p.avail || 1) || 0, line = num(inp.line);
       const s = Math.max(0.5, st.cv * mu);
@@ -222,12 +266,13 @@ function propsView() {
         const ladder = [...new Set((S.prop.stat === "rec" ? [-2, -1, 0, 1, 2].map((d) => half(mu + d)) : [0.6, 0.8, 1, 1.2, 1.4].map((f) => half(mu * f))).filter((x) => x > 0))];
         const lad = `<div class="tbl" style="margin-top:8px"><table><tr><th>Line</th><th>Over</th><th>Under</th><th>Fair over price</th></tr>${ladder.map((L) => { const o = 1 - normCdf((L - mu) / s); return `<tr><td>${L}</td><td>${pct(o, 1)}</td><td>${pct(1 - o, 1)}</td><td>${fmtOdds(probToAmerican(o))}</td></tr>`; }).join("")}</table></div>`;
         const head = `<div class="muted">${esc(p.name)} · projected ${st.label.toLowerCase()}</div><div class="big">${mu.toFixed(1)}</div>`;
+        const addBtns = line != null ? `<div style="margin:6px 0"><button class="b p" data-addchk="over">+ Over ${line} to slip</button> <button class="b" data-addchk="under">+ Under ${line} to slip</button></div>` : "";
         if (line == null) out = `${head}<div class="muted">Enter Hard Rock's line above for an exact over/under chance. Model chance at typical lines:</div>${lad}`;
         else {
           const over = 1 - normCdf((line - mu) / s), oo = num(inp.over), uo = num(inp.under);
           out = `${head}<div class="two"><div><div class="muted">Over ${line}</div><div class="big">${pct(over, 1)}</div><div>fair ${fmtOdds(probToAmerican(over))}${oo != null ? ` · EV <b class="${cls(ev(over, oo))}">${signed(ev(over, oo) * 100, 1)}%</b>` : ""}</div></div>
           <div><div class="muted">Under ${line}</div><div class="big">${pct(1 - over, 1)}</div><div>fair ${fmtOdds(probToAmerican(1 - over))}${uo != null ? ` · EV <b class="${cls(ev(1 - over, uo))}">${signed(ev(1 - over, uo) * 100, 1)}%</b>` : ""}</div></div></div>
-          <div class="muted">Normal distribution, sd ≈ ${(st.cv * 100).toFixed(0)}% of projection. Other lines:</div>${lad}`;
+          ${addBtns}<div class="muted">Normal distribution, sd ≈ ${(st.cv * 100).toFixed(0)}% of projection. Other lines:</div>${lad}`;
         }
       }
     }
@@ -242,7 +287,7 @@ function propsView() {
   <input class="odds" data-p="over" placeholder="${S.prop.stat === "td" ? "Yes odds" : "Over odds"}" value="${esc(inp.over)}">
   ${S.prop.stat === "td" ? "" : `<input class="odds" data-p="under" placeholder="Under odds" value="${esc(inp.under)}">`}</div>${out}</div>
   <h2>Anytime TD leaders</h2><div class="controls">${sortSel}<span class="muted">${pool.length} players${S.pg !== "ALL" ? " in this game" : ""}</span></div><div class="card tbl"><table><tr><th>Player</th><th>Opp</th><th>Chance</th><th>Def. TDs allowed to pos</th><th>Fair price</th><th>Hard Rock</th><th>EV</th><th></th></tr>
-  ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td class="muted">${p.matchups.td ? `${p.matchups.td.allowed}/g (lg ${p.matchups.td.league}) #${p.matchups.td.rank}` : "–"}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>`;
+  ${td.map((p) => { const id = "td|" + p.id; const hr = num(S.hr[id]); return `<tr><td>${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td>${pct(p.tdProb)}</td><td class="muted">${p.matchups.td ? `${p.matchups.td.allowed}/g (lg ${p.matchups.td.league}) #${p.matchups.td.rank}` : "–"}</td><td>${fmtOdds(p.fairTd)}</td><td>${oddsInput(id)}</td><td>${hr != null ? `<span class="${cls(ev(p.tdProb, hr))}">${signed(ev(p.tdProb, hr) * 100, 1)}%</span>` : "–"}</td><td><button class="b" data-addtd="${p.id}">+ slip</button></td></tr>`; }).join("")}</table></div>${ideasSection()}`;
 }
 
 // ----- teams / record -----
@@ -275,12 +320,26 @@ function render() {
 function go(tab) { S.tab = tab; store.set("tab", tab); render(); }
 
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-tab],[data-add],[data-addtd],[data-rm],[data-load],[data-clear],[data-star]");
+  const t = e.target.closest("[data-addprop],[data-addchk],[data-tab],[data-add],[data-addtd],[data-rm],[data-load],[data-clear],[data-star]");
   if (!t) return;
   const d = t.dataset;
   if (d.tab) return go(d.tab);
   if (d.add) { addSlip(d.add); t.textContent = "✓"; return; }
-  if (d.addtd) { const p = D.players.find((x) => x.id === d.addtd); const id = "td|" + p.id; S.custom[id] = { label: `${p.name} anytime TD`, prob: p.tdProb, gameId: p.gameId }; addSlip(id); t.textContent = "✓"; return; }
+  if (d.addprop) {
+    const [stat, pid] = d.addprop.split("|"), p = PLAYERS.get(pid), inp = S.il[d.addprop] ?? {}, line = num(inp.line);
+    if (line == null) { t.textContent = "enter line"; return; }
+    const id = addPropLeg(p, stat, "over", line);
+    if (num(inp.odds) != null) { S.hr[id] = num(inp.odds); store.set("hr", S.hr); }
+    t.textContent = "✓"; return;
+  }
+  if (d.addchk) {
+    const p = D.players.find((x) => `${x.name} (${x.team})` === S.prop.player), inp = S.prop.by?.[S.prop.stat] ?? {};
+    const id = addPropLeg(p, S.prop.stat, d.addchk, num(inp.line));
+    const o = num(d.addchk === "over" ? inp.over : inp.under);
+    if (o != null) { S.hr[id] = o; store.set("hr", S.hr); }
+    t.textContent = "✓ added"; return;
+  }
+  if (d.addtd) { const p = D.players.find((x) => x.id === d.addtd); const id = "td|" + p.id; S.custom[id] = { kind: "td", pid: p.id, label: `${p.name} anytime TD`, prob: p.tdProb, gameId: p.gameId }; addSlip(id); t.textContent = "✓"; return; }
   if (d.rm) { S.slip = S.slip.filter((x) => x !== d.rm); store.set("slip", S.slip); updatePill(); return render(); }
   if (d.load) { S.slip = d.load.split(","); store.set("slip", S.slip); updatePill(); return render(); }
   if (d.clear !== undefined) { S.slip = []; store.set("slip", []); updatePill(); return render(); }
@@ -292,6 +351,8 @@ document.addEventListener("change", (e) => {
   if (d.stake !== undefined) { S.stake = num(el.value) ?? 0; store.set("stake", S.stake); return render(); }
   if (d.f) { S[d.f] = el.type === "checkbox" ? el.checked : el.value; if (d.f === "scoring") store.set("scoring", S.scoring); return render(); }
   if (d.ss) { S.ss[d.ss] = el.value; return render(); }
+  if (d.idea) { S[d.idea] = el.value; if (d.idea === "stat") { S.idea = el.value; store.set("idea", S.idea); } return render(); }
+  if (d.il) { const [stat, pid, k] = d.il.split("|"); const key = stat + "|" + pid; (S.il[key] ??= {})[k] = el.value; store.set("il", S.il); return render(); }
   if (d.pf) { S[d.pf] = el.value; if (d.pf === "pg" || d.pf === "psort") store.set(d.pf, S[d.pf]); return render(); }
   if (d.p) { if (["line", "over", "under"].includes(d.p)) ((S.prop.by ??= {})[S.prop.stat] ??= {})[d.p] = el.value; else S.prop[d.p] = el.value; store.set("prop", S.prop); return render(); }
 });
@@ -310,7 +371,7 @@ async function boot() {
   for (const p of D.players) PLAYERS.set(p.id, p);
   // Drop slip entries whose game left this week's slate (stale after weekly rollover).
   S.slip = S.slip.filter((id) => LEGS.has(id) || S.custom[id]);
-  S.custom = Object.fromEntries(Object.entries(S.custom).map(([id, c]) => { const p = PLAYERS.get(id.slice(3)); return p ? [id, { ...c, prob: p.tdProb, gameId: p.gameId }] : null; }).filter(Boolean));
+  S.custom = Object.fromEntries(Object.entries(S.custom).map(([id, c]) => { const p = PLAYERS.get(c.pid ?? id.slice(3)); return p ? [id, propLeg({ kind: "td", ...c }, p)] : null; }).filter(Boolean));
   S.slip = S.slip.filter((id) => LEGS.has(id) || S.custom[id]);
   store.set("slip", S.slip);
   const wk = D.targetWeek ? `Week ${D.targetWeek}` : "Off-season";
