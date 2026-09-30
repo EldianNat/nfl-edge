@@ -43,3 +43,15 @@ button.b:hover{border-color:var(--acc)}button.p{background:var(--acc);color:#042
 .x{cursor:pointer;color:var(--mut)}.x:hover{color:var(--bad)}
 .star{cursor:pointer;color:var(--mut);font-size:16px;background:none;border:0}.star.on{color:var(--warn)}
 @media (max-width:600px){.grid{grid-template-columns:1fr}.head{padding-bottom:0}}
+
+.sl{font-weight:700;color:var(--mut);width:1%}
+td.wrap{white-space:normal;min-width:170px}
+.total{font-size:22px;font-weight:800;margin:0 6px}
+.results{border:1px solid var(--line);border-radius:8px;margin-top:6px;overflow:hidden}
+.results>div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line)}
+.results>div:last-child{border-bottom:0}
+textarea{width:100%;margin:6px 0;background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:8px;font:inherit;resize:vertical}
+input[type=number]{-moz-appearance:textfield}
+table.mt td:nth-child(2),table.mt th:nth-child(2),td.wrap,th.wrap{text-align:left}
+.sub{font-size:12px;margin-top:1px}
+@media (max-width:600px){.tbl .hs{display:none}}

@@ -5,6 +5,7 @@ Static site for NFL parlay research and fantasy matchups. Data refreshes itself.
 - **Games**: model score, win/cover/over probabilities, edge vs. consensus line, Hard Rock price boxes.
 - **Parlay Lab**: slip builder (combined probability, payout, EV) + auto-suggested parlays.
 - **Fantasy**: weekly projections (PPR/half/std), matchup grades, start/sit, TD chances.
+- **My Team**: save your fantasy roster(s) (search, or paste from ESPN/Yahoo/Sleeper), set scoring and lineup slots, and get the best lineup automatically, with bench reasoning, toss-ups and locks. Covers QB/RB/WR/TE/FLEX/SUPERFLEX plus kickers and defenses.
 - **Prop Checker**: enter a Hard Rock prop line/price, get over/under probability and EV.
 - **Record**: picks are logged before kickoff and graded after, so the track record is honest.
 

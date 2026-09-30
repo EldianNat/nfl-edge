@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { parseCsv, buildTeamRatings, buildGame, buildPlayers, MARGIN_SD } from "../lib/model.mjs";
+import { buildKickers, buildDefenses, buildOthers } from "../lib/special.mjs";
 
 const OUT = join(fileURLToPath(new URL(".", import.meta.url)), "..", "public", "data");
 const BASE = "https://github.com/nflverse/nflverse-data/releases/download";
@@ -66,11 +67,21 @@ async function main() {
   let targetWeek = null, weekGames = [];
   if (unplayed.length) {
     targetWeek = Math.min(...unplayed.map((g) => +g.week));
-    weekGames = games.filter((g) => +g.week === targetWeek).map((g) => buildGame(g, R, opts)).filter(Boolean).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
+    weekGames = games.filter((g) => +g.week === targetWeek).map((g) => {
+      const o = buildGame(g, R, opts);
+      if (o && played(g)) { o.final = true; o.score = { home: +g.home_score, away: +g.away_score }; }
+      return o;
+    }).filter(Boolean).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
   }
 
   const inj = injRows && targetWeek ? injRows.filter((r) => +r.week === targetWeek) : [];
-  const { players, cv } = weekGames.length ? buildPlayers(playerRows.filter((r) => r.season_type === "REG"), weekGames, inj, { carryover }) : { players: [], cv: {} };
+  const regPlayerRows = playerRows.filter((r) => r.season_type === "REG");
+  const { players, cv } = weekGames.length ? buildPlayers(regPlayerRows, weekGames, inj, { carryover }) : { players: [], cv: {} };
+  const scores = new Map(ratingGames.filter(played).map((g) => [g.game_id, { home: g.home_team, away: g.away_team, homeScore: +g.home_score, awayScore: +g.away_score }]));
+  const kickers = weekGames.length ? buildKickers(regPlayerRows, weekGames, inj, { carryover }) : [];
+  const defenses = weekGames.length ? buildDefenses(teamRows.filter((r) => r.season_type === "REG"), scores, weekGames, { carryover }) : [];
+  const slateTeams = new Set(weekGames.flatMap((g) => [g.home, g.away]));
+  const others = buildOthers(regPlayerRows, new Set([...players, ...kickers].map((p) => p.id)), slateTeams, Object.keys(R.teams));
 
   const teams = Object.entries(R.teams).map(([team, t]) => ({ team, ...t })).sort((a, b) => b.net - a.net).map((t, i) => ({ ...t, rank: i + 1 }));
 
@@ -78,7 +89,7 @@ async function main() {
     season, targetWeek, statsSeason, usingPriorSeason: usingPrior, gamesRated: maxGames,
     marginSd: MARGIN_SD, avgPts: Math.round(R.avgPts * 10) / 10,
     injuryWeek: inj.length ? targetWeek : null,
-    games: weekGames, players, teams, cv,
+    games: weekGames, players, kickers, defenses, others, teams, cv,
     sources: { nflverse: BASE.replace("/releases/download", ""), lines: "nflverse schedules (consensus closing/current lines) – not Hard Rock Bet" },
   };
 
@@ -128,7 +139,7 @@ async function main() {
     await writeFile(join(OUT, "picks-log.json"), JSON.stringify(newLog, null, 1));
     changed = true;
   }
-  console.log(`${changed ? "Updated" : "No change"}: ${season} wk ${targetWeek ?? "-"}  | ${weekGames.length} games, ${players.length} players, ratings from ${statsSeason} (${maxGames} gp)`);
+  console.log(`${changed ? "Updated" : "No change"}: ${season} wk ${targetWeek ?? "-"}  | ${weekGames.length} games, ${players.length} players, ${kickers.length} K, ${defenses.length} D/ST, ${others.length} others, ratings from ${statsSeason} (${maxGames} gp)`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

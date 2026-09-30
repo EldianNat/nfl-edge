@@ -1,4 +1,5 @@
 import { normCdf, americanToProb, americanToDecimal, probToAmerican, ev, parlay, fmtOdds, fmtLine } from "./js/math.js";
+import { initTeams, curTeam, toggleRoster, myTeamView, mtClick, mtChange } from "./js/myteam.js";
 
 // ---------- state ----------
 const store = {
@@ -13,7 +14,6 @@ const S = {
   stake: store.get("stake", 10),
   scoring: store.get("scoring", "ppr"),
   pos: "ALL", q: "", team: "ALL", mine: false,
-  roster: store.get("roster", []),
   prop: store.get("prop", { player: "", stat: "recYds", line: "", over: "", under: "" }),
   pg: store.get("pg", "ALL"),      // prop checker game filter
   psort: store.get("psort", "chance"), // "chance" | "game"
@@ -23,7 +23,8 @@ const S = {
   il: store.get("il", {}),            // "stat|playerId" -> {line, odds} typed from Hard Rock
   ipos: "ALL",
 };
-let D, LOG, LEGS = new Map(), PLAYERS = new Map(), GAMES = new Map();
+initTeams(S, store); // saved fantasy teams (migrates the old ★ list)
+let D, LOG, LEGS = new Map(), PLAYERS = new Map(), GAMES = new Map(), ENT = new Map(), SLATE = new Set(), CTX;
 
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -74,7 +75,7 @@ const views = {
       <div class="card"><h3>Most likely legs</h3><div class="muted">Highest model hit probability</div>${mini(likely)}</div></div>
       <h2>Week ${D.targetWeek} games</h2><div class="grid">${D.games.map(gameCard).join("")}</div>`;
   },
-  parlay: parlayView, fantasy: fantasyView, props: propsView, teams: teamsView, record: recordView,
+  parlay: parlayView, fantasy: fantasyView, myteam: () => myTeamView(CTX), props: propsView, teams: teamsView, record: recordView,
   about() {
     return `<div class="card"><h2 style="margin-top:0">How it works</h2>
     <p><b>Data.</b> Everything comes from the free <a href="https://github.com/nflverse/nflverse-data" style="color:var(--blue)">nflverse</a> data feeds (schedules & consensus lines, team EPA, player stats, injury reports). A scheduled GitHub Action re-runs the pipeline every few hours; the site rebuilds itself whenever new data lands. Nothing to do by hand each week.</p>
@@ -83,6 +84,7 @@ const views = {
     <p><b>Leg probabilities.</b> Margin ~ Normal(projection, ${D.marginSd}) and total ~ Normal(projection, 13). "Edge" compares the model probability to the no-vig consensus probability. "EV" uses whatever price you enter (Hard Rock Bet's) or the consensus price.</p>
     <p><b>Parlays.</b> Combined probability multiplies leg probabilities, so it assumes the legs are independent. Keep to one leg per game; same-game legs are correlated and this math misprices them.</p>
     <p><b>Fantasy.</b> Per-player component projections (yards, catches, TDs) use recency-weighted averages regressed toward positional norms (TDs regressed hardest), then scaled by opponent fantasy-points-allowed to that position and the team's projected scoring. Injury-report status reduces the projection.</p>
+    <p><b>My Team.</b> Add your roster (search or paste it from ESPN/Yahoo/Sleeper), set your league's scoring and starting slots, and the site picks the highest-projected legal lineup with an exact optimizer — it is checked against brute force in the test suite. Kickers and defenses are projected too: kickers from their recent field-goal/XP output scaled by the team's expected scoring (and wind); defenses from expected sacks and takeaways against the opponent plus an expected points-allowed score. Each team has its own roster, scoring and slots, and can lock a player in or out. Saved in your browser only.</p>
     <p><b>Props and touchdown legs use real stats, not fantasy points.</b> For each defense we track what it actually allows per game to each position (passing, rushing and receiving yards, catches, touchdowns), compare it to the league average, and apply that stat-specific matchup to the player's projection. Only the Fantasy tab uses blended fantasy-point matchups.</p>
     <p><b>Hard Rock Bet.</b> No sportsbook publishes a free odds feed, so the automatic lines are the nflverse consensus. Type Hard Rock's actual price in any "HR" box and edges, EV, and parlay payout recalculate. Your entries are saved in your browser only.</p>
     <p><b>Limits.</b> No public feed gives player prop lines or full play-by-play weather/matchup detail in real time; models are simple on purpose. Treat outputs as one input, not a guarantee. Early in the season (few games) everything is noisy.</p></div>`;
@@ -102,7 +104,7 @@ function gameCard(g) {
   const w = g.probs.homeWin;
   const chips = [g.div && "Division game", g.wind != null && g.wind >= 12 && `Wind ${g.wind} mph`, g.temp != null && g.temp <= 32 && `${g.temp}°F`, g.roof === "dome" && "Dome", ...g.factors].filter(Boolean);
   const A = D.teams.find((t) => t.team === g.away), H = D.teams.find((t) => t.team === g.home);
-  return `<div class="card game"><div class="top"><span>${kickoff(g)}</span><span>${esc(g.stadium || "")}</span></div>
+  return `<div class="card game"><div class="top"><span>${kickoff(g)}${g.final ? ` · <b>Final: ${g.away} ${g.score.away}, ${g.home} ${g.score.home}</b>` : ""}</span><span>${esc(g.stadium || "")}</span></div>
     <div class="matchup"><div class="tm">${g.away}<small>#${A?.rank ?? "?"} · ${esc(g.awayQb || "")}</small></div>
     <div class="score">${g.proj.awayPts.toFixed(0)} – ${g.proj.homePts.toFixed(0)}<small>model score</small></div>
     <div class="tm" style="text-align:right">${g.home}<small>#${H?.rank ?? "?"} · ${esc(g.homeQb || "")}</small></div></div>
@@ -151,17 +153,20 @@ function parlayView() {
 // ----- fantasy -----
 const grade = (g) => `<span class="grade g${g[0]}">${g}</span>`;
 const pv = (p) => (p[S.scoring] ?? p.ppr);
+const allP = () => [...D.players, ...(D.kickers ?? []), ...(D.defenses ?? [])];
+const inTeam = (id) => curTeam(S).roster.includes(id);
 function filtered() {
   const q = S.q.trim().toLowerCase();
-  return D.players.filter((p) => (S.pos === "ALL" || p.pos === S.pos) && (S.team === "ALL" || p.team === S.team) && (!q || p.name.toLowerCase().includes(q)) && (!S.mine || S.roster.includes(p.id))).sort((a, b) => pv(b) - pv(a));
+  const src = S.pos === "K" ? D.kickers ?? [] : S.pos === "DST" ? D.defenses ?? [] : D.players;
+  return src.filter((p) => (S.pos === "ALL" || p.pos === S.pos) && (S.team === "ALL" || p.team === S.team) && (!q || p.name.toLowerCase().includes(q)) && (!S.mine || inTeam(p.id))).sort((a, b) => pv(b) - pv(a));
 }
-function sd(p) { return 0.3 * pv(p) + 3; }
+function sd(p) { return p.pos === "K" ? 3 : p.pos === "DST" ? 4.5 : 0.3 * pv(p) + 3; }
 function fantasyView() {
   const rows = filtered();
   const teams = [...new Set(D.players.map((p) => p.team))].sort();
   const opts = (arr, cur) => arr.map((x) => `<option ${x === cur ? "selected" : ""}>${x}</option>`).join("");
-  const dl = `<datalist id="pl">${D.players.map((p) => `<option value="${esc(p.name)} (${p.team})">`).join("")}</datalist>`;
-  const find = (v) => D.players.find((p) => `${p.name} (${p.team})` === v);
+  const dl = `<datalist id="pl">${allP().map((p) => `<option value="${esc(p.name)} (${p.team})">`).join("")}</datalist>`;
+  const find = (v) => allP().find((p) => `${p.name} (${p.team})` === v);
   const A = find(S.ss.a), B = find(S.ss.b);
   let verdict = "";
   if (A && B) {
@@ -175,16 +180,16 @@ function fantasyView() {
   <h2>Week ${D.targetWeek} projections</h2>
   <div class="controls">
     <select data-f="scoring">${["ppr", "half", "std"].map((s) => `<option value="${s}" ${S.scoring === s ? "selected" : ""}>${{ ppr: "PPR", half: "Half PPR", std: "Standard" }[s]}</option>`).join("")}</select>
-    <select data-f="pos">${opts(["ALL", "QB", "RB", "WR", "TE"], S.pos)}</select>
+    <select data-f="pos">${opts(["ALL", "QB", "RB", "WR", "TE", "K", "DST"], S.pos)}</select>
     <select data-f="team">${opts(["ALL", ...teams], S.team)}</select>
     <input data-f="q" placeholder="Search player" value="${esc(S.q)}">
-    <label class="muted"><input type="checkbox" data-f="mine" ${S.mine ? "checked" : ""}> My roster (★)</label>
+    <label class="muted"><input type="checkbox" data-f="mine" ${S.mine ? "checked" : ""}> My team (★)</label>
     ${D.injuryWeek ? "" : `<span class="chip w">Injury report for week ${D.targetWeek} not published yet</span>`}
   </div>
   <div class="card tbl"><table><tr><th></th><th>Player</th><th>Opp</th><th>Proj</th><th>Matchup</th><th>Team pts</th><th>Last games</th><th>Any-time TD</th><th>Status</th></tr>
-  ${rows.slice(0, 150).map((p) => `<tr><td><button class="star ${S.roster.includes(p.id) ? "on" : ""}" data-star="${p.id}">★</button></td><td>${p.headshot ? `<img class="hs" loading="lazy" src="${esc(p.headshot)}" alt="">` : ""}${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td><b>${pv(p).toFixed(1)}</b></td><td>${grade(p.grade)} <span class="muted">×${p.matchup.toFixed(2)}</span></td><td>${p.implied}</td><td class="muted">${p.last.join(" · ")}</td><td>${pct(p.tdProb)} <span class="muted">${fmtOdds(p.fairTd)}</span></td><td>${p.injury ? `<span class="${/out|doubt/i.test(p.injury.status) ? "neg" : "warn"}">${esc(p.injury.status)}</span>` : ""}</td></tr>`).join("")}</table></div>
+  ${rows.slice(0, 150).map((p) => `<tr><td><button class="star ${inTeam(p.id) ? "on" : ""}" data-star="${p.id}">★</button></td><td>${p.headshot ? `<img class="hs" loading="lazy" src="${esc(p.headshot)}" alt="">` : ""}${esc(p.name)} <span class="muted">${p.pos} ${p.team}</span></td><td>${p.home ? "vs" : "@"} ${p.opp}</td><td><b>${pv(p).toFixed(1)}</b></td><td>${grade(p.grade)} <span class="muted">${p.tdProb == null ? "#" + p.rank : "×" + p.matchup.toFixed(2)}</span></td><td>${p.pos === "DST" ? "opp " + p.oppImplied : p.implied}</td><td class="muted">${p.last.join(" · ")}</td><td>${p.tdProb == null ? "–" : pct(p.tdProb)} <span class="muted">${p.tdProb == null ? "" : fmtOdds(p.fairTd)}</span></td><td>${p.injury ? `<span class="${/out|doubt/i.test(p.injury.status) ? "neg" : "warn"}">${esc(p.injury.status)}</span>` : ""}</td></tr>`).join("")}</table></div>
   ${rows.length > 150 ? `<p class="muted">Showing top 150 of ${rows.length}. Filter to narrow.</p>` : ""}
-  <p class="muted">Matchup grade = how many fantasy points the opposing defense has allowed to that position (A+ = best matchup). “Any-time TD” is the model's rushing+receiving TD chance with its fair price.</p>`;
+  <p class="muted">Matchup grade = how many fantasy points the opposing defense has allowed to that position (A+ = best matchup). “Any-time TD” is the model's rushing+receiving TD chance with its fair price. ★ adds a player to your team — see the <a href="#" data-tab="myteam" style="color:var(--blue)">My Team</a> tab for your auto-generated lineup.</p>`;
 }
 
 // ----- props -----
@@ -213,7 +218,7 @@ function addPropLeg(p, stat, side, line) {
 }
 function ideasSection() {
   const stat = S.idea, st = STATS[stat];
-  const rows = D.players.filter((p) => (S.ipos === "ALL" || p.pos === S.ipos) && !(p.injury && /out|doubt/i.test(p.injury.status)) && statMu(p, stat) >= MINPROJ[stat] && !(stat === "rushYds" && p.pos === "QB") && (S.pg === "ALL" || p.gameId === S.pg))
+  const rows = D.players.filter((p) => !p.low && !GAMES.get(p.gameId)?.final && (S.ipos === "ALL" || p.pos === S.ipos) && !(p.injury && /out|doubt/i.test(p.injury.status)) && statMu(p, stat) >= MINPROJ[stat] && !(stat === "rushYds" && p.pos === "QB") && (S.pg === "ALL" || p.gameId === S.pg))
     .sort((a, b) => statMu(b, stat) - statMu(a, stat)).slice(0, 15);
   const mk = { recYds: "recYds", rushYds: "rushYds", passYds: "passYds", rec: "rec" }[stat];
   const body = rows.map((p) => {
@@ -242,7 +247,7 @@ function propChips(p) {
 }
 function propsView() {
   if (S.pg !== "ALL" && !GAMES.has(S.pg)) S.pg = "ALL";
-  const pool = D.players.filter((x) => (S.pg === "ALL" || x.gameId === S.pg) && (S.ppos === "ALL" || x.pos === S.ppos));
+  const pool = D.players.filter((x) => !x.low && !GAMES.get(x.gameId)?.final && (S.pg === "ALL" || x.gameId === S.pg) && (S.ppos === "ALL" || x.pos === S.ppos));
   const gOrder = new Map(D.games.map((g, i) => [g.id, i]));
   const gameSel = `<select data-pf="pg"><option value="ALL">All games</option>${D.games.map((g) => `<option value="${g.id}" ${S.pg === g.id ? "selected" : ""}>${g.away} @ ${g.home} · ${kickoff(g)}</option>`).join("")}</select>`;
   const posSel = `<select data-pf="ppos">${["ALL", "QB", "RB", "WR", "TE"].map((x) => `<option ${S.ppos === x ? "selected" : ""}>${x}</option>`).join("")}</select>`;
@@ -320,10 +325,15 @@ function render() {
 function go(tab) { S.tab = tab; store.set("tab", tab); render(); }
 
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-addprop],[data-addchk],[data-tab],[data-add],[data-addtd],[data-rm],[data-load],[data-clear],[data-star]");
+  const t = e.target.closest("[data-mt],[data-addprop],[data-addchk],[data-tab],[data-add],[data-addtd],[data-rm],[data-load],[data-clear],[data-star]");
   if (!t) return;
   const d = t.dataset;
-  if (d.tab) return go(d.tab);
+  if (d.tab) { e.preventDefault(); return go(d.tab); }
+  if (d.mt !== undefined) {
+    const i = d.mt.indexOf("|"), act = i < 0 ? d.mt : d.mt.slice(0, i), arg = i < 0 ? "" : d.mt.slice(i + 1);
+    if (mtClick(CTX, act, arg, t)) render();
+    return;
+  }
   if (d.add) { addSlip(d.add); t.textContent = "✓"; return; }
   if (d.addprop) {
     const [stat, pid] = d.addprop.split("|"), p = PLAYERS.get(pid), inp = S.il[d.addprop] ?? {}, line = num(inp.line);
@@ -343,10 +353,25 @@ document.addEventListener("click", (e) => {
   if (d.rm) { S.slip = S.slip.filter((x) => x !== d.rm); store.set("slip", S.slip); updatePill(); return render(); }
   if (d.load) { S.slip = d.load.split(","); store.set("slip", S.slip); updatePill(); return render(); }
   if (d.clear !== undefined) { S.slip = []; store.set("slip", []); updatePill(); return render(); }
-  if (d.star) { S.roster = S.roster.includes(d.star) ? S.roster.filter((x) => x !== d.star) : [...S.roster, d.star]; store.set("roster", S.roster); return render(); }
+  if (d.star) { toggleRoster(CTX, d.star); return render(); }
 });
+// A change event fires on blur, i.e. during the mousedown of whatever the user clicked next. Re-rendering then
+// replaces that button before the click lands, so hold the re-render until the pointer is released.
+let pressed = false, deferred = false;
+const release = () => { pressed = false; if (deferred) { deferred = false; setTimeout(render, 60); } };
+document.addEventListener("pointerdown", () => { pressed = true; }, true);
+document.addEventListener("pointerup", release, true);
+document.addEventListener("pointercancel", release, true);
+const rerender = () => { if (pressed) deferred = true; else render(); };
+
 document.addEventListener("change", (e) => {
   const el = e.target, d = el.dataset;
+  const render = rerender;
+  if (d.mti !== undefined) {
+    const i = d.mti.indexOf("|"), f = i < 0 ? d.mti : d.mti.slice(0, i), arg = i < 0 ? "" : d.mti.slice(i + 1);
+    if (mtChange(CTX, f, arg, el.value)) render();
+    return;
+  }
   if (d.hr !== undefined) { const v = num(el.value); if (v == null || Math.abs(v) < 100) delete S.hr[d.hr]; else S.hr[d.hr] = v; store.set("hr", S.hr); return render(); }
   if (d.stake !== undefined) { S.stake = num(el.value) ?? 0; store.set("stake", S.stake); return render(); }
   if (d.f) { S[d.f] = el.type === "checkbox" ? el.checked : el.value; if (d.f === "scoring") store.set("scoring", S.scoring); return render(); }
@@ -356,7 +381,11 @@ document.addEventListener("change", (e) => {
   if (d.pf) { S[d.pf] = el.value; if (d.pf === "pg" || d.pf === "psort") store.set(d.pf, S[d.pf]); return render(); }
   if (d.p) { if (["line", "over", "under"].includes(d.p)) ((S.prop.by ??= {})[S.prop.stat] ??= {})[d.p] = el.value; else S.prop[d.p] = el.value; store.set("prop", S.prop); return render(); }
 });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && e.target.dataset?.mti === "q") { e.preventDefault(); if (mtClick(CTX, "addFirst", "", e.target)) { render(); $('[data-mti="q"]')?.focus(); } }
+});
 document.addEventListener("input", (e) => {
+  if (e.target.dataset.mti === "q") { S.mtq = e.target.value; const pos = e.target.selectionStart; render(); const q = $('[data-mti="q"]'); q?.focus(); q?.setSelectionRange(pos, pos); return; }
   if (e.target.dataset.f === "q") { S.q = e.target.value; const pos = e.target.selectionStart; render(); const q = $('[data-f="q"]'); q?.focus(); q?.setSelectionRange(pos, pos); }
 });
 
@@ -367,8 +396,12 @@ async function boot() {
   } catch {
     $("#view").innerHTML = `<div class="card">Data hasn't been generated yet. Run <code>npm run refresh</code>, then reload.</div>`; $("#status").textContent = "No data"; return;
   }
-  for (const g of D.games) { g.final = false; GAMES.set(g.id, g); for (const l of g.legs) LEGS.set(l.id, l); }
+  for (const g of D.games) { g.final = !!g.final; GAMES.set(g.id, g); for (const l of g.legs) LEGS.set(l.id, l); }
   for (const p of D.players) PLAYERS.set(p.id, p);
+  SLATE = new Set(D.games.flatMap((g) => [g.away, g.home]));
+  for (const list of [D.players, D.kickers ?? [], D.defenses ?? []]) for (const p of list) { p.projected = true; ENT.set(p.id, p); }
+  for (const [id, name, pos, team] of D.others ?? []) if (!ENT.has(id)) ENT.set(id, { id, name, pos, team, projected: false });
+  CTX = { S, D, ENT, GAMES, SLATE, store, early, render, h: { esc, pct, signed, cls, grade } };
   // Drop slip entries whose game left this week's slate (stale after weekly rollover).
   S.slip = S.slip.filter((id) => LEGS.has(id) || S.custom[id]);
   S.custom = Object.fromEntries(Object.entries(S.custom).map(([id, c]) => { const p = PLAYERS.get(c.pid ?? id.slice(3)); return p ? [id, propLeg({ kind: "td", ...c }, p)] : null; }).filter(Boolean));
