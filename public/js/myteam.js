@@ -2,6 +2,7 @@
 // The page state lives in app.js; this module gets it through a context object `C`.
 import { optimize, DEFAULT_SLOTS, SLOT_ORDER } from "./lineup.js";
 import { parsePaste, normName } from "./roster.js";
+import { exportBackup, parseBackup } from "./backup.js";
 
 const POS_ORDER = ["QB", "RB", "WR", "TE", "K", "DST"];
 const SCORING = { ppr: "PPR", half: "Half PPR", std: "Standard" };
@@ -17,7 +18,7 @@ export function initTeams(S, store) {
   S.teams = teams;
   const id = store.get("teamId", teams[0].id);
   S.teamId = teams.some((t) => t.id === id) ? id : teams[0].id;
-  Object.assign(S, { mtq: "", mtPasteOpen: false, mtPasteText: "", mtResult: null, mtConfirm: null });
+  Object.assign(S, { mtq: "", mtPasteOpen: false, mtPasteText: "", mtResult: null, mtConfirm: null, mtBackup: "", mtBackupMsg: null, mtRestoreText: "" });
 }
 
 export const curTeam = (S) => S.teams.find((t) => t.id === S.teamId) ?? S.teams[0];
@@ -91,7 +92,7 @@ export function myTeamView(C) {
   const cands = [], unknown = [];
   for (const id of t.roster) { const c = candidate(C, id, t.scoring); if (c) cands.push(c); else unknown.push(id); }
   const res = cands.length && D.targetWeek ? optimize(cands, t.slots, t.locks) : null;
-  return `${C.early()}${teamBar(C, t)}${settings(C, t)}${lineupCard(C, t, res, cands)}${addCard(C, t)}${rosterCard(C, t, cands, unknown)}`;
+  return `${C.early()}${teamBar(C, t)}${settings(C, t)}${lineupCard(C, t, res, cands)}${addCard(C, t)}${rosterCard(C, t, cands, unknown)}${backupCard(C)}`;
 }
 
 function teamBar(C, t) {
@@ -205,6 +206,19 @@ function rosterCard(C, t, cands, unknown) {
     <div class="muted" style="margin-top:6px">“Always start” forces a player into your lineup (for a must-start star, or a game you can't move); “Never start” keeps him out (say, a player you're trading away). Players on bye or ruled out are skipped automatically.</div></div>`;
 }
 
+function backupCard(C) {
+  const { S, h } = C;
+  const confirm = S.mtConfirm === "restore";
+  return `<div class="card"><h3>Back up or move your data</h3>
+    <div class="muted">Your teams, Hard Rock odds and parlay slip are saved only in this browser, on this web address. To move them to a new phone or browser (or if the site's address ever changes), create a backup code here, then paste it into the Restore box on the other one.</div>
+    <div style="margin:8px 0"><button class="b p" data-mt="backupMake">Create backup code</button></div>
+    ${S.mtBackup ? `<textarea readonly rows="4" aria-label="Backup code">${h.esc(S.mtBackup)}</textarea><div><button class="b" data-mt="backupCopy">Copy code</button></div>` : ""}
+    <div style="margin-top:12px"><b>Restore</b> <span class="muted">— replaces the teams on this device</span></div>
+    <textarea data-mti="restorebox" rows="3" placeholder="Paste a backup code (starts with NFLEDGE1:)">${h.esc(S.mtRestoreText)}</textarea>
+    <button class="b" data-mt="restore" ${confirm ? 'style="border-color:var(--bad);color:var(--bad)"' : ""}>${confirm ? "Click again to confirm restore" : "Restore from code"}</button>
+    ${S.mtBackupMsg ? `<div class="banner" style="margin-top:8px">${h.esc(S.mtBackupMsg)}</div>` : ""}</div>`;
+}
+
 // ---- events ----------------------------------------------------------------
 function lineupText(C) {
   const t = curTeam(C.S);
@@ -220,7 +234,7 @@ function lineupText(C) {
 // Returns true when the page should re-render.
 export function mtClick(C, action, arg, el) {
   const { S } = C, t = curTeam(S);
-  if (action !== "clear" && action !== "delete") S.mtConfirm = null;
+  if (action !== "clear" && action !== "delete" && action !== "restore") S.mtConfirm = null;
   switch (action) {
     case "add": addIds(C, [arg]); S.mtq = ""; return true;
     case "addFirst": { const r = searchResults(C, t)[0]; if (!r) return false; addIds(C, [r.id]); S.mtq = ""; return true; }
@@ -248,6 +262,26 @@ export function mtClick(C, action, arg, el) {
       S.mtPasteOpen = unmatched.length > 0;
       return true;
     }
+    case "backupMake":
+    case "backupCopy": {
+      const code = action === "backupMake" ? exportBackup((k) => C.store.get(k, undefined)) : S.mtBackup;
+      S.mtBackup = code;
+      S.mtBackupMsg = "Backup code created below. Copy it and paste it into the Restore box on your other device.";
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(() => { S.mtBackupMsg = "Backup code copied to your clipboard (also shown below). Paste it into the Restore box on your other device."; C.render(); }, () => {});
+      return true;
+    }
+    case "restore": {
+      const box = document.querySelector('[data-mti="restorebox"]');
+      const text = box ? box.value : S.mtRestoreText;
+      S.mtRestoreText = text;
+      const r = parseBackup(text);
+      if (!r.ok) { S.mtConfirm = null; S.mtBackupMsg = r.error; return true; }
+      if (S.mtConfirm !== "restore") { S.mtConfirm = "restore"; S.mtBackupMsg = `Found a backup with ${r.data.teams?.length ?? 0} team(s). This replaces the teams on this device — click the button again to confirm.`; return true; }
+      for (const [k, v] of Object.entries(r.data)) C.store.set(k, v);
+      S.mtConfirm = null;
+      location.reload();
+      return false;
+    }
     case "copy": {
       const txt = lineupText(C);
       const done = () => { el.textContent = "Copied ✓"; };
@@ -267,6 +301,7 @@ export function mtChange(C, field, arg, value) {
     case "scoring": if (SCORING[value]) { t.scoring = value; save(C); } return true;
     case "slot": { const n = Math.max(0, Math.min(8, Math.floor(Number(value)) || 0)); t.slots[arg] = n; save(C); return true; }
     case "lock": if (value) t.locks[arg] = value; else delete t.locks[arg]; save(C); return true;
+    case "restorebox": S.mtRestoreText = value; return false; // no re-render: it would swallow the click on "Restore"
     case "pastebox": S.mtPasteText = value; return false; // no re-render: it would swallow the click on "Match & add"
     case "q": return false;
   }
