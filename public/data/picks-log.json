@@ -38,23 +38,23 @@
    "week": 4,
    "away": "ATL",
    "home": "NO",
-   "loggedAt": "2026-10-05T03:40:55.820Z",
+   "loggedAt": "2026-10-05T06:49:49.562Z",
    "lockedAt": null,
    "spread": 1.5,
    "total": 47.5,
    "projMargin": 2.4,
-   "projTotal": 46.1,
+   "projTotal": 46.2,
    "ml": {
     "side": "home",
-    "prob": 0.572
+    "prob": 0.57
    },
    "ats": {
     "side": "home",
-    "prob": 0.528
+    "prob": 0.526
    },
    "ou": {
     "side": "under",
-    "prob": 0.543
+    "prob": 0.539
    }
   },
   {
@@ -144,6 +144,13 @@
    "ou": {
     "side": "over",
     "prob": 0.522
+   },
+   "result": {
+    "homeScore": 32,
+    "awayScore": 26,
+    "ml": "loss",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -502,16 +509,16 @@
  "record": {
   "ml": {
    "w": 9,
-   "l": 5,
+   "l": 6,
    "p": 0
   },
   "ats": {
-   "w": 11,
+   "w": 12,
    "l": 1,
    "p": 2
   },
   "ou": {
-   "w": 5,
+   "w": 6,
    "l": 9,
    "p": 0
   },
