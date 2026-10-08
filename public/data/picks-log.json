@@ -518,7 +518,7 @@
    "week": 5,
    "away": "BAL",
    "home": "ATL",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 3.5,
    "total": 43.5,
@@ -543,7 +543,7 @@
    "week": 5,
    "away": "BUF",
    "home": "LA",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 3,
    "total": 54.5,
@@ -568,7 +568,7 @@
    "week": 5,
    "away": "CHI",
    "home": "GB",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -1.5,
    "total": 45.5,
@@ -593,7 +593,7 @@
    "week": 5,
    "away": "CIN",
    "home": "MIA",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -6.5,
    "total": 42.5,
@@ -618,7 +618,7 @@
    "week": 5,
    "away": "CLE",
    "home": "NYJ",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 1.5,
    "total": 39.5,
@@ -643,7 +643,7 @@
    "week": 5,
    "away": "DEN",
    "home": "LAC",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -3.5,
    "total": 41.5,
@@ -668,7 +668,7 @@
    "week": 5,
    "away": "DET",
    "home": "ARI",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -5.5,
    "total": 54.5,
@@ -693,12 +693,12 @@
    "week": 5,
    "away": "HOU",
    "home": "TEN",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -7.5,
-   "total": 37.5,
+   "total": 38.5,
    "projMargin": -6.4,
-   "projTotal": 38,
+   "projTotal": 38.8,
    "ml": {
     "side": "away",
     "prob": 0.683
@@ -709,7 +709,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.515
+    "prob": 0.51
    }
   },
   {
@@ -718,7 +718,7 @@
    "week": 5,
    "away": "IND",
    "home": "PIT",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 2.5,
    "total": 44.5,
@@ -743,7 +743,7 @@
    "week": 5,
    "away": "LV",
    "home": "NE",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 3.5,
    "total": 45.5,
@@ -768,7 +768,7 @@
    "week": 5,
    "away": "MIN",
    "home": "NO",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": -1.5,
    "total": 42.5,
@@ -793,7 +793,7 @@
    "week": 5,
    "away": "NYG",
    "home": "WAS",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 3.5,
    "total": 42.5,
@@ -818,12 +818,12 @@
    "week": 5,
    "away": "PHI",
    "home": "JAX",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 7,
-   "total": 42.5,
+   "total": 41.5,
    "projMargin": 7.9,
-   "projTotal": 43.1,
+   "projTotal": 42.3,
    "ml": {
     "side": "home",
     "prob": 0.722
@@ -834,7 +834,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.52
+    "prob": 0.525
    }
   },
   {
@@ -843,19 +843,19 @@
    "week": 5,
    "away": "SF",
    "home": "SEA",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
-   "spread": 2.5,
+   "spread": 3,
    "total": 45.5,
-   "projMargin": 1.2,
+   "projMargin": 1.6,
    "projTotal": 46.6,
    "ml": {
     "side": "home",
-    "prob": 0.536
+    "prob": 0.548
    },
    "ats": {
     "side": "away",
-    "prob": 0.538
+    "prob": 0.54
    },
    "ou": {
     "side": "over",
@@ -868,7 +868,7 @@
    "week": 5,
    "away": "TB",
    "home": "DAL",
-   "loggedAt": "2026-10-08T09:40:12.470Z",
+   "loggedAt": "2026-10-08T12:47:30.063Z",
    "lockedAt": null,
    "spread": 8.5,
    "total": 47.5,
