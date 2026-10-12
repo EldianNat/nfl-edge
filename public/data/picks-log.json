@@ -550,19 +550,19 @@
    "week": 5,
    "away": "BUF",
    "home": "LA",
-   "loggedAt": "2026-10-12T06:53:14.514Z",
+   "loggedAt": "2026-10-12T09:44:55.436Z",
    "lockedAt": null,
-   "spread": 3,
+   "spread": 3.5,
    "total": 54.5,
-   "projMargin": 2.8,
+   "projMargin": 3.2,
    "projTotal": 54.3,
    "ml": {
     "side": "home",
-    "prob": 0.581
+    "prob": 0.593
    },
    "ats": {
     "side": "away",
-    "prob": 0.507
+    "prob": 0.51
    },
    "ou": {
     "side": "under",
