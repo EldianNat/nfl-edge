@@ -998,7 +998,7 @@
    "week": 6,
    "away": "ARI",
    "home": "LA",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 12.5,
    "total": 51.5,
@@ -1023,23 +1023,23 @@
    "week": 6,
    "away": "BAL",
    "home": "CLE",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
-   "spread": -5.5,
-   "total": 42.5,
-   "projMargin": -4.1,
-   "projTotal": 43.5,
+   "spread": -4.5,
+   "total": 41.5,
+   "projMargin": -3.3,
+   "projTotal": 42.7,
    "ml": {
     "side": "away",
-    "prob": 0.619
+    "prob": 0.596
    },
    "ats": {
     "side": "home",
-    "prob": 0.542
+    "prob": 0.536
    },
    "ou": {
     "side": "over",
-    "prob": 0.531
+    "prob": 0.537
    }
   },
   {
@@ -1048,7 +1048,7 @@
    "week": 6,
    "away": "BUF",
    "home": "LV",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": -5.5,
    "total": 53.5,
@@ -1073,23 +1073,23 @@
    "week": 6,
    "away": "CAR",
    "home": "PHI",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
-   "spread": -1.5,
-   "total": 40.5,
-   "projMargin": -2.1,
-   "projTotal": 41.8,
+   "spread": -3.5,
+   "total": 38.5,
+   "projMargin": -3.7,
+   "projTotal": 40.2,
    "ml": {
     "side": "away",
-    "prob": 0.563
+    "prob": 0.609
    },
    "ats": {
     "side": "away",
-    "prob": 0.519
+    "prob": 0.507
    },
    "ou": {
     "side": "over",
-    "prob": 0.541
+    "prob": 0.553
    }
   },
   {
@@ -1098,7 +1098,7 @@
    "week": 6,
    "away": "CHI",
    "home": "ATL",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": -1.5,
    "total": 51.5,
@@ -1123,7 +1123,7 @@
    "week": 6,
    "away": "DAL",
    "home": "GB",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 1.5,
    "total": 53.5,
@@ -1148,7 +1148,7 @@
    "week": 6,
    "away": "HOU",
    "home": "JAX",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 2.5,
    "total": 42.5,
@@ -1173,7 +1173,7 @@
    "week": 6,
    "away": "LAC",
    "home": "KC",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 8.5,
    "total": 42.5,
@@ -1198,7 +1198,7 @@
    "week": 6,
    "away": "NO",
    "home": "NYG",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": -1.5,
    "total": 45.5,
@@ -1223,7 +1223,7 @@
    "week": 6,
    "away": "NYJ",
    "home": "NE",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 7.5,
    "total": 43.5,
@@ -1248,7 +1248,7 @@
    "week": 6,
    "away": "PIT",
    "home": "TB",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": -2.5,
    "total": 39.5,
@@ -1273,7 +1273,7 @@
    "week": 6,
    "away": "SEA",
    "home": "DEN",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": -2.5,
    "total": 40.5,
@@ -1298,7 +1298,7 @@
    "week": 6,
    "away": "TEN",
    "home": "IND",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 7,
    "total": 44.5,
@@ -1323,12 +1323,12 @@
    "week": 6,
    "away": "WAS",
    "home": "SF",
-   "loggedAt": "2026-10-15T15:57:40.657Z",
+   "loggedAt": "2026-10-15T19:04:25.404Z",
    "lockedAt": null,
    "spread": 7.5,
-   "total": 50.5,
+   "total": 51.5,
    "projMargin": 8.7,
-   "projTotal": 50.8,
+   "projTotal": 51.6,
    "ml": {
     "side": "home",
     "prob": 0.74
@@ -1339,7 +1339,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.51
+    "prob": 0.504
    }
   }
  ],
