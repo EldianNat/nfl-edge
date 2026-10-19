@@ -1414,15 +1414,15 @@
    "week": 6,
    "away": "WAS",
    "home": "SF",
-   "loggedAt": "2026-10-19T03:59:59.628Z",
+   "loggedAt": "2026-10-19T07:17:52.424Z",
    "lockedAt": null,
    "spread": 7.5,
    "total": 52.5,
    "projMargin": 8.9,
-   "projTotal": 52.7,
+   "projTotal": 52.8,
    "ml": {
     "side": "home",
-    "prob": 0.744
+    "prob": 0.745
    },
    "ats": {
     "side": "home",
@@ -1430,7 +1430,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.507
+    "prob": 0.509
    }
   }
  ],
