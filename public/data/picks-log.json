@@ -1175,6 +1175,13 @@
    "ou": {
     "side": "over",
     "prob": 0.526
+   },
+   "result": {
+    "homeScore": 23,
+    "awayScore": 13,
+    "ml": "loss",
+    "ats": "win",
+    "ou": "loss"
    }
   },
   {
@@ -1407,7 +1414,7 @@
    "week": 6,
    "away": "WAS",
    "home": "SF",
-   "loggedAt": "2026-10-19T01:06:15.182Z",
+   "loggedAt": "2026-10-19T03:59:59.628Z",
    "lockedAt": null,
    "spread": 7.5,
    "total": 52.5,
@@ -1419,32 +1426,32 @@
    },
    "ats": {
     "side": "home",
-    "prob": 0.54
+    "prob": 0.541
    },
    "ou": {
     "side": "over",
-    "prob": 0.506
+    "prob": 0.507
    }
   }
  ],
  "record": {
   "ml": {
    "w": 25,
-   "l": 17,
+   "l": 18,
    "p": 1
   },
   "ats": {
-   "w": 27,
+   "w": 28,
    "l": 13,
    "p": 3
   },
   "ou": {
    "w": 16,
-   "l": 27,
+   "l": 28,
    "p": 0
   },
   "atsConf": {
-   "w": 2,
+   "w": 3,
    "l": 0,
    "p": 1
   },
