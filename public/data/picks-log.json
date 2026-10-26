@@ -1510,12 +1510,12 @@
    "week": 7,
    "away": "DAL",
    "home": "PHI",
-   "loggedAt": "2026-10-26T13:21:01.969Z",
+   "loggedAt": "2026-10-26T20:38:22.505Z",
    "lockedAt": null,
    "spread": -4.5,
-   "total": 43.5,
+   "total": 44.5,
    "projMargin": -3.5,
-   "projTotal": 44.7,
+   "projTotal": 45.5,
    "ml": {
     "side": "away",
     "prob": 0.602
@@ -1526,7 +1526,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.538
+    "prob": 0.53
    }
   },
   {
