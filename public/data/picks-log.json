@@ -2022,23 +2022,23 @@
    "week": 8,
    "away": "CHI",
    "home": "SEA",
-   "loggedAt": "2026-11-01T22:13:21.296Z",
+   "loggedAt": "2026-11-02T06:29:46.228Z",
    "lockedAt": null,
    "spread": 3,
    "total": 46.5,
-   "projMargin": 2.9,
-   "projTotal": 45.8,
+   "projMargin": 3.1,
+   "projTotal": 45.7,
    "ml": {
     "side": "home",
-    "prob": 0.585
+    "prob": 0.591
    },
    "ats": {
-    "side": "away",
+    "side": "home",
     "prob": 0.503
    },
    "ou": {
     "side": "under",
-    "prob": 0.522
+    "prob": 0.524
    }
   },
   {
@@ -2128,6 +2128,13 @@
    "ou": {
     "side": "over",
     "prob": 0.519
+   },
+   "result": {
+    "homeScore": 28,
+    "awayScore": 24,
+    "ml": "loss",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -2153,6 +2160,13 @@
    "ou": {
     "side": "under",
     "prob": 0.58
+   },
+   "result": {
+    "homeScore": 24,
+    "awayScore": 9,
+    "ml": "win",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -2242,6 +2256,13 @@
    "ou": {
     "side": "over",
     "prob": 0.544
+   },
+   "result": {
+    "homeScore": 19,
+    "awayScore": 24,
+    "ml": "win",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -2251,7 +2272,7 @@
    "away": "PHI",
    "home": "WAS",
    "loggedAt": "2026-11-01T22:13:21.296Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-02T06:29:46.228Z",
    "spread": 6,
    "total": 40.5,
    "projMargin": 5.2,
@@ -2267,6 +2288,13 @@
    "ou": {
     "side": "over",
     "prob": 0.532
+   },
+   "result": {
+    "homeScore": 27,
+    "awayScore": 10,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -2304,18 +2332,18 @@
  ],
  "record": {
   "ml": {
-   "w": 43,
-   "l": 24,
+   "w": 46,
+   "l": 25,
    "p": 1
   },
   "ats": {
-   "w": 37,
-   "l": 28,
+   "w": 40,
+   "l": 29,
    "p": 3
   },
   "ou": {
-   "w": 30,
-   "l": 38,
+   "w": 33,
+   "l": 39,
    "p": 0
   },
   "atsConf": {
@@ -2324,12 +2352,12 @@
    "p": 1
   },
   "ouConf": {
-   "w": 1,
+   "w": 3,
    "l": 3,
    "p": 0
   },
   "mlConf": {
-   "w": 12,
+   "w": 15,
    "l": 6,
    "p": 0
   }
