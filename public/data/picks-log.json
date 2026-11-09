@@ -2374,23 +2374,23 @@
    "week": 9,
    "away": "BUF",
    "home": "MIN",
-   "loggedAt": "2026-11-09T11:52:43.172Z",
+   "loggedAt": "2026-11-09T22:33:28.458Z",
    "lockedAt": null,
-   "spread": -3,
-   "total": 43.5,
-   "projMargin": -1.7,
-   "projTotal": 44,
+   "spread": -3.5,
+   "total": 45.5,
+   "projMargin": -2.1,
+   "projTotal": 45.4,
    "ml": {
     "side": "away",
-    "prob": 0.551
+    "prob": 0.561
    },
    "ats": {
     "side": "home",
-    "prob": 0.537
+    "prob": 0.542
    },
    "ou": {
-    "side": "over",
-    "prob": 0.516
+    "side": "under",
+    "prob": 0.504
    }
   },
   {
