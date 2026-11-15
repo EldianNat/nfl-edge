@@ -2822,22 +2822,22 @@
    "week": 10,
    "away": "BUF",
    "home": "NYJ",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
-   "spread": -7.5,
-   "total": 51.5,
-   "projMargin": -7.4,
-   "projTotal": 51.3,
+   "spread": -8.5,
+   "total": 50.5,
+   "projMargin": -8.1,
+   "projTotal": 50.7,
    "ml": {
     "side": "away",
-    "prob": 0.708
+    "prob": 0.725
    },
    "ats": {
     "side": "home",
-    "prob": 0.503
+    "prob": 0.513
    },
    "ou": {
-    "side": "under",
+    "side": "over",
     "prob": 0.505
    }
   },
@@ -2847,7 +2847,7 @@
    "week": 10,
    "away": "CAR",
    "home": "NO",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": 1.5,
    "total": 48.5,
@@ -2872,12 +2872,12 @@
    "week": 10,
    "away": "HOU",
    "home": "CLE",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": -4.5,
-   "total": 40.5,
+   "total": 41.5,
    "projMargin": -4,
-   "projTotal": 41.8,
+   "projTotal": 42.5,
    "ml": {
     "side": "away",
     "prob": 0.616
@@ -2888,7 +2888,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.541
+    "prob": 0.531
    }
   },
   {
@@ -2897,12 +2897,12 @@
    "week": 10,
    "away": "JAX",
    "home": "TEN",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": -10.5,
-   "total": 46.5,
+   "total": 45.5,
    "projMargin": -11.6,
-   "projTotal": 46.1,
+   "projTotal": 45.4,
    "ml": {
     "side": "away",
     "prob": 0.805
@@ -2913,7 +2913,7 @@
    },
    "ou": {
     "side": "under",
-    "prob": 0.514
+    "prob": 0.504
    }
   },
   {
@@ -2922,7 +2922,7 @@
    "week": 10,
    "away": "KC",
    "home": "ATL",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": -3,
    "total": 47.5,
@@ -2947,7 +2947,7 @@
    "week": 10,
    "away": "LA",
    "home": "ARI",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": -9.5,
    "total": 38.5,
@@ -2972,7 +2972,7 @@
    "week": 10,
    "away": "LAC",
    "home": "BAL",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": 4.5,
    "total": 38.5,
@@ -2997,7 +2997,7 @@
    "week": 10,
    "away": "MIA",
    "home": "IND",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": 4.5,
    "total": 37.5,
@@ -3022,7 +3022,7 @@
    "week": 10,
    "away": "MIN",
    "home": "GB",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": 2.5,
    "total": 42.5,
@@ -3048,7 +3048,7 @@
    "away": "NE",
    "home": "DET",
    "loggedAt": "2026-11-15T06:51:58.181Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-15T16:28:20.090Z",
    "spread": 2.5,
    "total": 49.5,
    "projMargin": 1.5,
@@ -3072,7 +3072,7 @@
    "week": 10,
    "away": "PIT",
    "home": "CIN",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": 3.5,
    "total": 49.5,
@@ -3097,7 +3097,7 @@
    "week": 10,
    "away": "SEA",
    "home": "LV",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
    "spread": -6.5,
    "total": 40.5,
@@ -3122,19 +3122,19 @@
    "week": 10,
    "away": "SF",
    "home": "DAL",
-   "loggedAt": "2026-11-15T06:51:58.181Z",
+   "loggedAt": "2026-11-15T16:28:20.090Z",
    "lockedAt": null,
-   "spread": -3.5,
+   "spread": -4.5,
    "total": 55.5,
-   "projMargin": -4.5,
+   "projMargin": -5.2,
    "projTotal": 56.5,
    "ml": {
     "side": "away",
-    "prob": 0.631
+    "prob": 0.65
    },
    "ats": {
     "side": "away",
-    "prob": 0.53
+    "prob": 0.521
    },
    "ou": {
     "side": "over",
