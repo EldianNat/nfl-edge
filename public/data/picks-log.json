@@ -2999,6 +2999,13 @@
    "ou": {
     "side": "over",
     "prob": 0.567
+   },
+   "result": {
+    "homeScore": 6,
+    "awayScore": 34,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "win"
    }
   },
   {
@@ -3007,23 +3014,23 @@
    "week": 10,
    "away": "LAC",
    "home": "BAL",
-   "loggedAt": "2026-11-15T23:00:14.571Z",
+   "loggedAt": "2026-11-16T06:52:20.017Z",
    "lockedAt": null,
    "spread": 4.5,
    "total": 38.5,
-   "projMargin": 4.3,
-   "projTotal": 38.5,
+   "projMargin": 4.4,
+   "projTotal": 38.6,
    "ml": {
     "side": "home",
-    "prob": 0.626
+    "prob": 0.627
    },
    "ats": {
     "side": "away",
-    "prob": 0.505
+    "prob": 0.504
    },
    "ou": {
     "side": "over",
-    "prob": 0.501
+    "prob": 0.503
    }
   },
   {
@@ -3129,7 +3136,7 @@
    "away": "PIT",
    "home": "CIN",
    "loggedAt": "2026-11-15T23:00:14.571Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-16T06:52:20.017Z",
    "spread": 3.5,
    "total": 49.5,
    "projMargin": 4,
@@ -3145,6 +3152,13 @@
    "ou": {
     "side": "over",
     "prob": 0.509
+   },
+   "result": {
+    "homeScore": 38,
+    "awayScore": 18,
+    "ml": "win",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -3170,6 +3184,13 @@
    "ou": {
     "side": "over",
     "prob": 0.539
+   },
+   "result": {
+    "homeScore": 13,
+    "awayScore": 21,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -3195,6 +3216,13 @@
    "ou": {
     "side": "over",
     "prob": 0.53
+   },
+   "result": {
+    "homeScore": 40,
+    "awayScore": 46,
+    "ml": "win",
+    "ats": "win",
+    "ou": "win"
    }
   },
   {
@@ -3232,18 +3260,18 @@
  ],
  "record": {
   "ml": {
-   "w": 65,
+   "w": 69,
    "l": 31,
    "p": 1
   },
   "ats": {
-   "w": 52,
-   "l": 42,
+   "w": 54,
+   "l": 44,
    "p": 3
   },
   "ou": {
-   "w": 45,
-   "l": 52,
+   "w": 48,
+   "l": 53,
    "p": 0
   },
   "atsConf": {
@@ -3252,12 +3280,12 @@
    "p": 1
   },
   "ouConf": {
-   "w": 9,
+   "w": 10,
    "l": 7,
    "p": 0
   },
   "mlConf": {
-   "w": 22,
+   "w": 25,
    "l": 6,
    "p": 0
   }
