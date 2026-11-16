@@ -3014,12 +3014,12 @@
    "week": 10,
    "away": "LAC",
    "home": "BAL",
-   "loggedAt": "2026-11-16T06:52:20.017Z",
+   "loggedAt": "2026-11-16T19:43:33.470Z",
    "lockedAt": null,
    "spread": 4.5,
-   "total": 38.5,
+   "total": 39.5,
    "projMargin": 4.4,
-   "projTotal": 38.6,
+   "projTotal": 39.3,
    "ml": {
     "side": "home",
     "prob": 0.627
@@ -3029,8 +3029,8 @@
     "prob": 0.504
    },
    "ou": {
-    "side": "over",
-    "prob": 0.503
+    "side": "under",
+    "prob": 0.508
    }
   },
   {
