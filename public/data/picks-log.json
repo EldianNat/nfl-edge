@@ -3270,7 +3270,7 @@
    "week": 11,
    "away": "ARI",
    "home": "KC",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 16.5,
    "total": 40.5,
@@ -3295,7 +3295,7 @@
    "week": 11,
    "away": "BAL",
    "home": "CAR",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 3,
    "total": 43.5,
@@ -3320,7 +3320,7 @@
    "week": 11,
    "away": "CIN",
    "home": "WAS",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": -6,
    "total": 53.5,
@@ -3377,7 +3377,7 @@
    "week": 11,
    "away": "JAX",
    "home": "NYG",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": -6,
    "total": 46.5,
@@ -3402,7 +3402,7 @@
    "week": 11,
    "away": "LV",
    "home": "DEN",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 10.5,
    "total": 40.5,
@@ -3427,7 +3427,7 @@
    "week": 11,
    "away": "MIA",
    "home": "BUF",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 16.5,
    "total": 44.5,
@@ -3452,19 +3452,19 @@
    "week": 11,
    "away": "MIN",
    "home": "SF",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
-   "spread": 3.5,
+   "spread": 3,
    "total": 46.5,
-   "projMargin": 3.5,
+   "projMargin": 3.2,
    "projTotal": 45.1,
    "ml": {
     "side": "home",
-    "prob": 0.603
+    "prob": 0.594
    },
    "ats": {
     "side": "home",
-    "prob": 0.501
+    "prob": 0.507
    },
    "ou": {
     "side": "under",
@@ -3477,7 +3477,7 @@
    "week": 11,
    "away": "NO",
    "home": "CHI",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 11.5,
    "total": 48.5,
@@ -3502,7 +3502,7 @@
    "week": 11,
    "away": "NYJ",
    "home": "LAC",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 3,
    "total": 41.5,
@@ -3527,12 +3527,12 @@
    "week": 11,
    "away": "PIT",
    "home": "PHI",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": -3.5,
-   "total": 38.5,
+   "total": 37.5,
    "projMargin": -4,
-   "projTotal": 39.1,
+   "projTotal": 38.5,
    "ml": {
     "side": "away",
     "prob": 0.617
@@ -3543,7 +3543,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.52
+    "prob": 0.531
    }
   },
   {
@@ -3552,19 +3552,19 @@
    "week": 11,
    "away": "TB",
    "home": "DET",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
-   "spread": 6,
+   "spread": 5.5,
    "total": 45.5,
-   "projMargin": 4.5,
+   "projMargin": 4.2,
    "projTotal": 44.9,
    "ml": {
     "side": "home",
-    "prob": 0.631
+    "prob": 0.623
    },
    "ats": {
     "side": "away",
-    "prob": 0.543
+    "prob": 0.538
    },
    "ou": {
     "side": "under",
@@ -3577,7 +3577,7 @@
    "week": 11,
    "away": "TEN",
    "home": "DAL",
-   "loggedAt": "2026-11-20T11:56:29.669Z",
+   "loggedAt": "2026-11-20T20:34:48.832Z",
    "lockedAt": null,
    "spread": 8.5,
    "total": 54.5,
