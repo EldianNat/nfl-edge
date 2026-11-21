@@ -3270,19 +3270,19 @@
    "week": 11,
    "away": "ARI",
    "home": "KC",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
-   "spread": 16.5,
+   "spread": 15.5,
    "total": 40.5,
-   "projMargin": 14.8,
+   "projMargin": 14.2,
    "projTotal": 43.6,
    "ml": {
     "side": "home",
-    "prob": 0.863
+    "prob": 0.853
    },
    "ats": {
     "side": "away",
-    "prob": 0.551
+    "prob": 0.54
    },
    "ou": {
     "side": "over",
@@ -3295,7 +3295,7 @@
    "week": 11,
    "away": "BAL",
    "home": "CAR",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 3,
    "total": 43.5,
@@ -3320,12 +3320,12 @@
    "week": 11,
    "away": "CIN",
    "home": "WAS",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": -6,
-   "total": 53.5,
+   "total": 54.5,
    "projMargin": -6.5,
-   "projTotal": 54,
+   "projTotal": 54.6,
    "ml": {
     "side": "away",
     "prob": 0.684
@@ -3336,7 +3336,7 @@
    },
    "ou": {
     "side": "over",
-    "prob": 0.516
+    "prob": 0.504
    }
   },
   {
@@ -3377,7 +3377,7 @@
    "week": 11,
    "away": "JAX",
    "home": "NYG",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": -6,
    "total": 46.5,
@@ -3402,7 +3402,7 @@
    "week": 11,
    "away": "LV",
    "home": "DEN",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 10.5,
    "total": 40.5,
@@ -3427,7 +3427,7 @@
    "week": 11,
    "away": "MIA",
    "home": "BUF",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 16.5,
    "total": 44.5,
@@ -3452,7 +3452,7 @@
    "week": 11,
    "away": "MIN",
    "home": "SF",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 3,
    "total": 46.5,
@@ -3477,7 +3477,7 @@
    "week": 11,
    "away": "NO",
    "home": "CHI",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 11.5,
    "total": 48.5,
@@ -3502,12 +3502,12 @@
    "week": 11,
    "away": "NYJ",
    "home": "LAC",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": 3,
-   "total": 41.5,
+   "total": 42.5,
    "projMargin": 1.4,
-   "projTotal": 41,
+   "projTotal": 41.6,
    "ml": {
     "side": "home",
     "prob": 0.543
@@ -3518,7 +3518,7 @@
    },
    "ou": {
     "side": "under",
-    "prob": 0.516
+    "prob": 0.527
    }
   },
   {
@@ -3527,7 +3527,7 @@
    "week": 11,
    "away": "PIT",
    "home": "PHI",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
    "spread": -3.5,
    "total": 37.5,
@@ -3552,23 +3552,23 @@
    "week": 11,
    "away": "TB",
    "home": "DET",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
-   "spread": 5.5,
-   "total": 45.5,
-   "projMargin": 4.2,
-   "projTotal": 44.9,
+   "spread": 4.5,
+   "total": 46.5,
+   "projMargin": 3.6,
+   "projTotal": 45.5,
    "ml": {
     "side": "home",
-    "prob": 0.623
+    "prob": 0.605
    },
    "ats": {
     "side": "away",
-    "prob": 0.538
+    "prob": 0.527
    },
    "ou": {
     "side": "under",
-    "prob": 0.52
+    "prob": 0.532
    }
   },
   {
@@ -3577,19 +3577,19 @@
    "week": 11,
    "away": "TEN",
    "home": "DAL",
-   "loggedAt": "2026-11-21T11:28:32.532Z",
+   "loggedAt": "2026-11-21T19:33:06.133Z",
    "lockedAt": null,
-   "spread": 8.5,
+   "spread": 7.5,
    "total": 54.5,
-   "projMargin": 7.5,
+   "projMargin": 6.9,
    "projTotal": 54.8,
    "ml": {
     "side": "home",
-    "prob": 0.711
+    "prob": 0.696
    },
    "ats": {
     "side": "away",
-    "prob": 0.529
+    "prob": 0.518
    },
    "ou": {
     "side": "over",
