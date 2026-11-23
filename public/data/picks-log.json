@@ -3287,6 +3287,13 @@
    "ou": {
     "side": "over",
     "prob": 0.594
+   },
+   "result": {
+    "homeScore": 34,
+    "awayScore": 7,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "win"
    }
   },
   {
@@ -3312,6 +3319,13 @@
    "ou": {
     "side": "over",
     "prob": 0.558
+   },
+   "result": {
+    "homeScore": 35,
+    "awayScore": 33,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "win"
    }
   },
   {
@@ -3320,19 +3334,19 @@
    "week": 11,
    "away": "CIN",
    "home": "WAS",
-   "loggedAt": "2026-11-22T19:52:10.438Z",
+   "loggedAt": "2026-11-23T01:51:04.218Z",
    "lockedAt": null,
    "spread": -6,
    "total": 54.5,
-   "projMargin": -6.5,
+   "projMargin": -6.1,
    "projTotal": 54.6,
    "ml": {
     "side": "away",
-    "prob": 0.684
+    "prob": 0.674
    },
    "ats": {
     "side": "away",
-    "prob": 0.513
+    "prob": 0.503
    },
    "ou": {
     "side": "over",
@@ -3378,7 +3392,7 @@
    "away": "JAX",
    "home": "NYG",
    "loggedAt": "2026-11-22T19:52:10.438Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-23T01:51:04.218Z",
    "spread": -6,
    "total": 45.5,
    "projMargin": -6.9,
@@ -3394,6 +3408,13 @@
    "ou": {
     "side": "over",
     "prob": 0.501
+   },
+   "result": {
+    "homeScore": 23,
+    "awayScore": 18,
+    "ml": "loss",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -3403,7 +3424,7 @@
    "away": "LV",
    "home": "DEN",
    "loggedAt": "2026-11-22T19:52:10.438Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-23T01:51:04.218Z",
    "spread": 10.5,
    "total": 40.5,
    "projMargin": 8.7,
@@ -3419,6 +3440,13 @@
    "ou": {
     "side": "over",
     "prob": 0.595
+   },
+   "result": {
+    "homeScore": 38,
+    "awayScore": 24,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "win"
    }
   },
   {
@@ -3444,6 +3472,13 @@
    "ou": {
     "side": "over",
     "prob": 0.549
+   },
+   "result": {
+    "homeScore": 26,
+    "awayScore": 9,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -3453,7 +3488,7 @@
    "away": "MIN",
    "home": "SF",
    "loggedAt": "2026-11-22T19:52:10.438Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-23T01:51:04.218Z",
    "spread": 3.5,
    "total": 46.5,
    "projMargin": 3.5,
@@ -3494,6 +3529,13 @@
    "ou": {
     "side": "over",
     "prob": 0.527
+   },
+   "result": {
+    "homeScore": 21,
+    "awayScore": 13,
+    "ml": "win",
+    "ats": "win",
+    "ou": "loss"
    }
   },
   {
@@ -3503,7 +3545,7 @@
    "away": "NYJ",
    "home": "LAC",
    "loggedAt": "2026-11-22T19:52:10.438Z",
-   "lockedAt": null,
+   "lockedAt": "2026-11-23T01:51:04.218Z",
    "spread": 3,
    "total": 43.5,
    "projMargin": 1.4,
@@ -3519,6 +3561,13 @@
    "ou": {
     "side": "under",
     "prob": 0.539
+   },
+   "result": {
+    "homeScore": 24,
+    "awayScore": 27,
+    "ml": "loss",
+    "ats": "win",
+    "ou": "loss"
    }
   },
   {
@@ -3544,6 +3593,13 @@
    "ou": {
     "side": "over",
     "prob": 0.531
+   },
+   "result": {
+    "homeScore": 19,
+    "awayScore": 16,
+    "ml": "loss",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -3569,6 +3625,13 @@
    "ou": {
     "side": "under",
     "prob": 0.543
+   },
+   "result": {
+    "homeScore": 31,
+    "awayScore": 21,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "loss"
    }
   },
   {
@@ -3594,38 +3657,45 @@
    "ou": {
     "side": "over",
     "prob": 0.51
+   },
+   "result": {
+    "homeScore": 51,
+    "awayScore": 30,
+    "ml": "win",
+    "ats": "loss",
+    "ou": "win"
    }
   }
  ],
  "record": {
   "ml": {
-   "w": 70,
-   "l": 32,
+   "w": 77,
+   "l": 35,
    "p": 1
   },
   "ats": {
-   "w": 55,
-   "l": 45,
+   "w": 57,
+   "l": 53,
    "p": 3
   },
   "ou": {
-   "w": 48,
-   "l": 55,
+   "w": 52,
+   "l": 61,
    "p": 0
   },
   "atsConf": {
-   "w": 4,
-   "l": 5,
+   "w": 5,
+   "l": 8,
    "p": 1
   },
   "ouConf": {
-   "w": 10,
-   "l": 7,
+   "w": 13,
+   "l": 9,
    "p": 0
   },
   "mlConf": {
-   "w": 26,
-   "l": 6,
+   "w": 31,
+   "l": 7,
    "p": 0
   }
  }
