@@ -3351,6 +3351,13 @@
    "ou": {
     "side": "over",
     "prob": 0.505
+   },
+   "result": {
+    "homeScore": 22,
+    "awayScore": 20,
+    "ml": "loss",
+    "ats": "win",
+    "ou": "loss"
    }
   },
   {
@@ -3672,22 +3679,422 @@
     "ats": "loss",
     "ou": "win"
    }
+  },
+  {
+   "gameId": "2026_12_ATL_MIN",
+   "season": 2026,
+   "week": 12,
+   "away": "ATL",
+   "home": "MIN",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 7,
+   "total": 42.5,
+   "projMargin": 6.6,
+   "projTotal": 39.9,
+   "ml": {
+    "side": "home",
+    "prob": 0.686
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.513
+   },
+   "ou": {
+    "side": "under",
+    "prob": 0.579
+   }
+  },
+  {
+   "gameId": "2026_12_BAL_HOU",
+   "season": 2026,
+   "week": 12,
+   "away": "BAL",
+   "home": "HOU",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 6.5,
+   "total": 46.5,
+   "projMargin": 6.6,
+   "projTotal": 46.3,
+   "ml": {
+    "side": "home",
+    "prob": 0.689
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.504
+   },
+   "ou": {
+    "side": "under",
+    "prob": 0.505
+   }
+  },
+  {
+   "gameId": "2026_12_CAR_TB",
+   "season": 2026,
+   "week": 12,
+   "away": "CAR",
+   "home": "TB",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 3,
+   "total": 43.5,
+   "projMargin": 3.5,
+   "projTotal": 43.8,
+   "ml": {
+    "side": "home",
+    "prob": 0.601
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.514
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.51
+   }
+  },
+  {
+   "gameId": "2026_12_CHI_DET",
+   "season": 2026,
+   "week": 12,
+   "away": "CHI",
+   "home": "DET",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": -2.5,
+   "total": 55.5,
+   "projMargin": -0.5,
+   "projTotal": 54.5,
+   "ml": {
+    "side": "away",
+    "prob": 0.514
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.56
+   },
+   "ou": {
+    "side": "under",
+    "prob": 0.532
+   }
+  },
+  {
+   "gameId": "2026_12_DEN_PIT",
+   "season": 2026,
+   "week": 12,
+   "away": "DEN",
+   "home": "PIT",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": -3,
+   "total": 37.5,
+   "projMargin": -2.7,
+   "projTotal": 39.5,
+   "ml": {
+    "side": "away",
+    "prob": 0.578
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.51
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.56
+   }
+  },
+  {
+   "gameId": "2026_12_GB_LA",
+   "season": 2026,
+   "week": 12,
+   "away": "GB",
+   "home": "LA",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 2.5,
+   "total": 43.5,
+   "projMargin": 3.6,
+   "projTotal": 43.2,
+   "ml": {
+    "side": "home",
+    "prob": 0.605
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.532
+   },
+   "ou": {
+    "side": "under",
+    "prob": 0.51
+   }
+  },
+  {
+   "gameId": "2026_12_KC_BUF",
+   "season": 2026,
+   "week": 12,
+   "away": "KC",
+   "home": "BUF",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 3,
+   "total": 47.5,
+   "projMargin": 2.9,
+   "projTotal": 49,
+   "ml": {
+    "side": "home",
+    "prob": 0.586
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.502
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.544
+   }
+  },
+  {
+   "gameId": "2026_12_LV_CLE",
+   "season": 2026,
+   "week": 12,
+   "away": "LV",
+   "home": "CLE",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 4.5,
+   "total": 41.5,
+   "projMargin": 3,
+   "projTotal": 44.2,
+   "ml": {
+    "side": "home",
+    "prob": 0.588
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.544
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.582
+   }
+  },
+  {
+   "gameId": "2026_12_NE_LAC",
+   "season": 2026,
+   "week": 12,
+   "away": "NE",
+   "home": "LAC",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 1.5,
+   "total": 35.5,
+   "projMargin": -0.5,
+   "projTotal": 38.9,
+   "ml": {
+    "side": "away",
+    "prob": 0.516
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.56
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.603
+   }
+  },
+  {
+   "gameId": "2026_12_NO_CIN",
+   "season": 2026,
+   "week": 12,
+   "away": "NO",
+   "home": "CIN",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 10,
+   "total": 50.5,
+   "projMargin": 9.7,
+   "projTotal": 51.3,
+   "ml": {
+    "side": "home",
+    "prob": 0.764
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.508
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.526
+   }
+  },
+  {
+   "gameId": "2026_12_NYG_IND",
+   "season": 2026,
+   "week": 12,
+   "away": "NYG",
+   "home": "IND",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": -6.5,
+   "total": 41.5,
+   "projMargin": -5.4,
+   "projTotal": 41.6,
+   "ml": {
+    "side": "away",
+    "prob": 0.655
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.532
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.502
+   }
+  },
+  {
+   "gameId": "2026_12_NYJ_MIA",
+   "season": 2026,
+   "week": 12,
+   "away": "NYJ",
+   "home": "MIA",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": -3.5,
+   "total": 40.5,
+   "projMargin": -2.1,
+   "projTotal": 41,
+   "ml": {
+    "side": "away",
+    "prob": 0.562
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.542
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.516
+   }
+  },
+  {
+   "gameId": "2026_12_PHI_DAL",
+   "season": 2026,
+   "week": 12,
+   "away": "PHI",
+   "home": "DAL",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 8.5,
+   "total": 47.5,
+   "projMargin": 7.8,
+   "projTotal": 49.1,
+   "ml": {
+    "side": "home",
+    "prob": 0.719
+   },
+   "ats": {
+    "side": "away",
+    "prob": 0.52
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.548
+   }
+  },
+  {
+   "gameId": "2026_12_SEA_SF",
+   "season": 2026,
+   "week": 12,
+   "away": "SEA",
+   "home": "SF",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 3,
+   "total": 46.5,
+   "projMargin": 4.4,
+   "projTotal": 46.8,
+   "ml": {
+    "side": "home",
+    "prob": 0.629
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.542
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.508
+   }
+  },
+  {
+   "gameId": "2026_12_TEN_JAX",
+   "season": 2026,
+   "week": 12,
+   "away": "TEN",
+   "home": "JAX",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": 14.5,
+   "total": 47.5,
+   "projMargin": 14.9,
+   "projTotal": 47.7,
+   "ml": {
+    "side": "home",
+    "prob": 0.866
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.513
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.506
+   }
+  },
+  {
+   "gameId": "2026_12_WAS_ARI",
+   "season": 2026,
+   "week": 12,
+   "away": "WAS",
+   "home": "ARI",
+   "loggedAt": "2026-11-24T13:59:50.544Z",
+   "lockedAt": null,
+   "spread": -7.5,
+   "total": 42.5,
+   "projMargin": -5.5,
+   "projTotal": 44.4,
+   "ml": {
+    "side": "away",
+    "prob": 0.659
+   },
+   "ats": {
+    "side": "home",
+    "prob": 0.558
+   },
+   "ou": {
+    "side": "over",
+    "prob": 0.558
+   }
   }
  ],
  "record": {
   "ml": {
    "w": 78,
-   "l": 35,
+   "l": 36,
    "p": 1
   },
   "ats": {
-   "w": 58,
+   "w": 59,
    "l": 53,
    "p": 3
   },
   "ou": {
    "w": 53,
-   "l": 61,
+   "l": 62,
    "p": 0
   },
   "atsConf": {
@@ -3702,7 +4109,7 @@
   },
   "mlConf": {
    "w": 31,
-   "l": 7,
+   "l": 8,
    "p": 0
   }
  }
